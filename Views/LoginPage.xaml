@@ -1,0 +1,67 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BibliotecaAPP.Views.LoginPage"
+             BackgroundColor="Transparent"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid>
+        <!-- Imagem de fundo -->
+        <Image Source="login_biblioteca.jpg"
+               Aspect="AspectFill"
+               Opacity="1.0"
+               IsOpaque="True" />
+
+        <!-- Camada azul escura translúcida -->
+        <BoxView BackgroundColor="#0B1D49"
+                 Opacity="0.75"
+                 InputTransparent="True" />
+
+        <!-- Conteúdo central -->
+        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20" Padding="30">
+
+            <!-- Título -->
+            <Label Text="Faça seu login."
+                   FontSize="28"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- Campo de e-mail -->
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Email Institucional" TextColor="White" FontSize="14" />
+                <Entry x:Name="EmailEntry"
+                       Placeholder="Digite seu e-mail"
+                       BackgroundColor="White"
+                       TextColor="Black"
+                       PlaceholderColor="Gray"
+                       HeightRequest="40"
+                       
+                       Margin="0,0,0,10" />
+            </VerticalStackLayout>
+
+            <!-- Campo de senha -->
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Senha" TextColor="White" FontSize="14" />
+                <Entry x:Name="SenhaEntry"
+                       Placeholder="Digite sua senha"
+                       IsPassword="True"
+                       BackgroundColor="White"
+                       TextColor="Black"
+                       PlaceholderColor="Gray"
+                       HeightRequest="40"
+                      
+                       Margin="0,0,0,10" />
+            </VerticalStackLayout>
+
+            <!-- Botão de login -->
+            <Button Text="LOGAR"
+                    BackgroundColor="#F97316"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="5"
+                    HeightRequest="45"
+                    Clicked="OnLoginClicked" />
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
