@@ -1,0 +1,27 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BibliotecaAPP.Views.CadastroMembroPage"
+             Title="Cadastro de Membros"
+             BackgroundColor="#f5f5f5">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20">
+
+            <Label Text="Cadastro de Membro"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <Entry Placeholder="Nome" x:Name="NomeEntry" />
+            <Entry Placeholder="CPF" x:Name="CpfEntry" Keyboard="Numeric" />
+            <Entry Placeholder="Telefone" x:Name="TelefoneEntry" Keyboard="Telephone" />
+            <Entry Placeholder="Email" x:Name="EmailEntry" Keyboard="Email" />
+
+            <Button Text="Salvar Membro"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    Clicked="OnSalvarMembroClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

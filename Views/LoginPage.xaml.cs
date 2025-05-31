@@ -1,6 +1,3 @@
-using BibliotecaAppBase.Views;
-using Microsoft.Maui.Controls;
-
 namespace BibliotecaAPP.Views;
 
 public partial class LoginPage : ContentPage
@@ -18,7 +15,7 @@ public partial class LoginPage : ContentPage
         // Simples validação (substitua por acesso ao banco depois)
         if (email == "admin@biblioteca.com" && senha == "1234")
         {
-            await Navigation.PushAsync(new ListaLivrosPage());
+            await Navigation.PushAsync(new CadastroMembroPage());
         }
         else
         {
