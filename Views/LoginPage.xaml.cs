@@ -11,6 +11,7 @@ public partial class LoginPage : ContentPage
     {
         var email = EmailEntry.Text;
         var senha = SenhaEntry.Text;
+        Application.Current.MainPage = new NavigationPage(new MainPage());
 
         // Simples validação (substitua por acesso ao banco depois)
         if (email == "admin@biblioteca.com" && senha == "1234")
