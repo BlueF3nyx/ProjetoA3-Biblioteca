@@ -1,0 +1,65 @@
+<Window x:Class="BibliotecaApp.RegistrarEmprestimo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Registrar Empréstimo" Height="450" Width="700" WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="20" >
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Registrar Empréstimo" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+        <!-- Seleção de Membro -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Grid.Row="1">
+            <Label Content="Membro:" Width="120" VerticalAlignment="Center"/>
+            <ComboBox Name="ComboBoxMembros" Width="300"/>
+        </StackPanel>
+
+        <!-- Seleção Livro + Duração + Data Empréstimo + Data Devolução + Botão Adicionar -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Grid.Row="2">
+            <StackPanel>
+                <Label Content="Livro:"/>
+                <ComboBox Name="ComboBoxLivros" Width="200"/>
+            </StackPanel>
+
+            <StackPanel Margin="10,0,0,0">
+                <Label Content="Duração (dias):"/>
+                <TextBox Name="TextBoxDuracao" Width="80" HorizontalContentAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Margin="10,0,0,0">
+                <Label Content="Data Empréstimo:"/>
+                <DatePicker Name="DatePickerEmprestimo" Width="140"/>
+            </StackPanel>
+
+            <StackPanel Margin="10,0,0,0">
+                <Label Content="Data Devolução:"/>
+                <DatePicker Name="DatePickerDevolucao" Width="140" IsEnabled="False"/>
+            </StackPanel>
+
+            <Button Content="Adicionar Livro" Width="120" Height="40" Margin="10,20,0,0" Click="AdicionarLivro_Click"/>
+        </StackPanel>
+
+        <!-- Lista dos livros adicionados -->
+        <DataGrid Name="DataGridLivrosEmprestados" Grid.Row="3" AutoGenerateColumns="False" Height="150" Margin="0,0,0,10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Livro" Binding="{Binding Livro}" Width="*"/>
+                <DataGridTextColumn Header="Duração (dias)" Binding="{Binding Duracao}" Width="100"/>
+                <DataGridTextColumn Header="Data Empréstimo" Binding="{Binding DataEmprestimo, StringFormat=d}" Width="140"/>
+                <DataGridTextColumn Header="Data Devolução" Binding="{Binding DataDevolucao, StringFormat=d}" Width="140"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Botões Confirmar e Cancelar -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="4">
+            <Button Content="Confirmar" Width="120" Margin="10" Click="Confirmar_Click"/>
+            <Button Content="Cancelar" Width="120" Margin="10" Click="Cancelar_Click"/>
+        </StackPanel>
+
+    </Grid>
+</Window>
