@@ -9,11 +9,6 @@ public partial class MainPage : ContentPage
         InitializeComponent();
     }
 
-    private void InitializeComponent()
-    {
-        throw new NotImplementedException();
-    }
-
     private void OnCadastroLivrosClicked(object sender, EventArgs e)
     {
         Navigation.PushAsync(new CadastroLivroPage());
@@ -26,28 +21,27 @@ public partial class MainPage : ContentPage
 
     private void OnRegistroEmprestimosClicked(object sender, EventArgs e)
     {
-        Navigation.PushAsync(new RegistroEmprestimosPage());
+        DisplayAlert("Aviso", "Funcionalidade em construção.", "OK");
     }
 
     private void OnGestaoDevolucoesClicked(object sender, EventArgs e)
     {
-        Navigation.PushAsync(new GestaoDevolucoesPage());
+        DisplayAlert("Aviso", "Funcionalidade em construção.", "OK");
     }
 
     private void OnHistoricoEmprestimosClicked(object sender, EventArgs e)
     {
-        Navigation.PushAsync(new HistoricoEmprestimosPage());
+        DisplayAlert("Aviso", "Funcionalidade em construção.", "OK");
     }
 
     private void OnRelatoriosClicked(object sender, EventArgs e)
     {
-        Navigation.PushAsync(new RelatoriosPage());
+        DisplayAlert("Aviso", "Funcionalidade em construção.", "OK");
     }
 
     private void OnLogoutClicked(object sender, EventArgs e)
     {
-        // Navegar para a tela de login, por exemplo
+        // Navegar para a tela de login
         Application.Current.MainPage = new LoginPage();
     }
 }
-

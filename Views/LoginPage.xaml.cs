@@ -15,7 +15,7 @@ public partial class LoginPage : ContentPage
         // Simples validação (substitua por acesso ao banco depois)
         if (email == "admin@biblioteca.com" && senha == "1234")
         {
-            await Navigation.PushAsync(new CadastroMembroPage());
+            await Navigation.PushAsync(new MainPage());
         }
         else
         {
