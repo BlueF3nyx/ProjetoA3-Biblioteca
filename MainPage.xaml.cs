@@ -26,17 +26,17 @@ public partial class MainPage : ContentPage
 
     private void OnGestaoDevolucoesClicked(object sender, EventArgs e)
     {
-        DisplayAlert("Aviso", "Funcionalidade em construção.", "OK");
+        Navigation.PushAsync(new GestaoDevolucoes());
     }
 
     private void OnHistoricoEmprestimosClicked(object sender, EventArgs e)
     {
-        DisplayAlert("Aviso", "Funcionalidade em construção.", "OK");
+        Navigation.PushAsync(new HistoricoEmprestimo());
     }
 
     private void OnRelatoriosClicked(object sender, EventArgs e)
     {
-        DisplayAlert("Aviso", "Funcionalidade em construção.", "OK");
+        Navigation.PushAsync(new RelatoriosPage());
     }
 
     private void OnLogoutClicked(object sender, EventArgs e)

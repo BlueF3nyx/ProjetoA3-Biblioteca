@@ -1,119 +1,166 @@
-﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BibliotecaAPP.MainPage">
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
+             x:Class="BibliotecaAPP.MainPage"  
+             BackgroundColor="#F0F2F5"  
+             NavigationPage.HasNavigationBar="False">  
 
-    <VerticalStackLayout Spacing="0">
+    <VerticalStackLayout Spacing="0">  
 
-        <!-- Header -->
-        <Grid BackgroundColor="#1F2937" HeightRequest="188" Padding="40,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+        <!-- Header -->  
+        <Grid BackgroundColor="#132356" HeightRequest="160" Padding="30">  
+            <Grid.ColumnDefinitions>  
+                <ColumnDefinition Width="*" />  
+                <ColumnDefinition Width="Auto" />  
+            </Grid.ColumnDefinitions>  
 
-            <!-- Título do sistema -->
-            <Label Text="Sistema de Biblioteca"
-                   FontSize="28"
-                   TextColor="White"
-                   VerticalOptions="Center"
-                   HorizontalOptions="Start" />
+            <Label Text="Sistema Biblioteca"  
+                   FontSize="34"  
+                   TextColor="White"  
+                   VerticalOptions="Center"  
+                   FontAttributes="Bold" />  
 
-            <!-- Nome do usuário -->
-            <Label Grid.Column="1"
-                   Text="Usuário"
-                   FontSize="16"
-                   TextColor="White"
-                   VerticalOptions="Center"
-                   Margin="20,0" />
+            <Button Grid.Column="1"  
+                    Text="Sair"  
+                    TextColor="White"  
+                    BackgroundColor="#F36E1E"  
+                    FontSize="18"  
+                    CornerRadius="12"  
+                    Padding="10,5"  
+                    VerticalOptions="Center"  
+                    Clicked="OnLogoutClicked" />  
+        </Grid>  
 
-            <!-- Botão de sair -->
-            <Button Grid.Column="2"
-                    Text="Sair"
-                    TextColor="White"
-                    BackgroundColor="Transparent"
-                    VerticalOptions="Center"
-                    Clicked="OnLogoutClicked" />
-        </Grid>
+        <!-- Dashboard -->  
+        <ScrollView>  
+            <Grid Padding="20" RowSpacing="20" ColumnSpacing="20">  
+                <Grid.RowDefinitions>  
+                    <RowDefinition Height="Auto"/>  
+                    <RowDefinition Height="Auto"/>  
+                </Grid.RowDefinitions>  
+                <Grid.ColumnDefinitions>  
+                    <ColumnDefinition Width="*" />  
+                    <ColumnDefinition Width="*" />  
+                    <ColumnDefinition Width="*" />  
+                </Grid.ColumnDefinitions>  
 
-        <!-- Bem-vindo -->
-        <Label Text="Bem-Vindo!"
-               FontSize="32"
-               TextColor="Black"
-               Margin="40,20,0,10" />
+                <!-- Card Template -->  
+                <!-- Cada card pode ter uma imagem acima do texto -->  
 
-        <!-- Dashboard Cards -->
-        <Grid Padding="40" RowSpacing="30" ColumnSpacing="30">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+                <!-- Cadastro de Livros -->  
+                <Frame Grid.Row="0" Grid.Column="0"  
+                       BackgroundColor="White"  
+                       CornerRadius="20"  
+                       Padding="10"  
+                       HeightRequest="170"  
+                       HasShadow="True">  
+                    <VerticalStackLayout>  
+                        <Image Source="livro.jpg" HeightRequest="60" HorizontalOptions="Center" />  
+                        <Button Text="Cadastro de Livros"  
+                                Clicked="OnCadastroLivrosClicked"  
+                                BackgroundColor="Transparent"  
+                                TextColor="Black"  
+                                FontSize="28"  
+                                FontAttributes="Bold"  
+                                HorizontalOptions="Center"/>  
+                    </VerticalStackLayout>  
+                </Frame>  
 
-            <!-- Card 1 -->
-            <Button Grid.Row="0" Grid.Column="0"
-                    Text="Cadastro de Livros"
-                    BackgroundColor="#2563EB"
-                    TextColor="White"
-                    FontSize="16"
-                    CornerRadius="20"
-                    HeightRequest="170"
-                    Clicked="OnCadastroLivrosClicked" />
+                <!-- Cadastro de Membros -->  
+                <Frame Grid.Row="0" Grid.Column="1"  
+                       BackgroundColor="White"  
+                       CornerRadius="20"  
+                       Padding="10"  
+                       HeightRequest="170"  
+                       HasShadow="True">  
+                    <VerticalStackLayout>  
+                        <Image Source="membro.jpg" HeightRequest="60" HorizontalOptions="Center" />  
+                        <Button Text="Cadastro de Membros"  
+                                Clicked="OnCadastroMembrosClicked"  
+                                BackgroundColor="Transparent"  
+                                TextColor="Black"  
+                                FontSize="28"  
+                                FontAttributes="Bold"  
+                                HorizontalOptions="Center"/>  
+                    </VerticalStackLayout>  
+                </Frame>  
 
-            <!-- Card 2 -->
-            <Button Grid.Row="0" Grid.Column="1"
-                    Text="Cadastro de Membros"
-                    BackgroundColor="#2563EB"
-                    TextColor="White"
-                    FontSize="16"
-                    CornerRadius="20"
-                    HeightRequest="170"
-                    Clicked="OnCadastroMembrosClicked" />
+                <!-- Registro de Empréstimos -->  
+                <Frame Grid.Row="0" Grid.Column="2"  
+                       BackgroundColor="White"  
+                       CornerRadius="20"  
+                       Padding="10"  
+                       HeightRequest="170"  
+                       HasShadow="True">  
+                    <VerticalStackLayout>  
+                        <Image Source="registro.jpg" HeightRequest="60" HorizontalOptions="Center" />  
+                        <Button Text="Registro de Empréstimos"  
+                                Clicked="OnRegistroEmprestimosClicked"  
+                                BackgroundColor="Transparent"  
+                                TextColor="Black"  
+                                FontSize="28"  
+                                FontAttributes="Bold"  
+                                HorizontalOptions="Center"/>  
+                    </VerticalStackLayout>  
+                </Frame>  
 
-            <!-- Card 3 -->
-            <Button Grid.Row="0" Grid.Column="2"
-                    Text="Registro de Empréstimos"
-                    BackgroundColor="#2563EB"
-                    TextColor="White"
-                    FontSize="16"
-                    CornerRadius="20"
-                    HeightRequest="170"
-                    Clicked="OnRegistroEmprestimosClicked" />
+                <!-- Gestão de Devoluções -->  
+                <Frame Grid.Row="1" Grid.Column="0"  
+                       BackgroundColor="White"  
+                       CornerRadius="20"  
+                       Padding="10"  
+                       HeightRequest="170"  
+                       HasShadow="True">  
+                    <VerticalStackLayout>  
+                        <Image Source="devolucoes.jpg" HeightRequest="60" HorizontalOptions="Center" />  
+                        <Button Text="Gestão de Devoluções"  
+                                Clicked="OnGestaoDevolucoesClicked"  
+                                BackgroundColor="Transparent"  
+                                TextColor="Black"  
+                                FontSize="28"  
+                                FontAttributes="Bold"  
+                                HorizontalOptions="Center"/>  
+                    </VerticalStackLayout>  
+                </Frame>  
 
-            <!-- Card 4 -->
-            <Button Grid.Row="1" Grid.Column="0"
-                    Text="Gestão de Devoluções"
-                    BackgroundColor="#2563EB"
-                    TextColor="White"
-                    FontSize="16"
-                    CornerRadius="20"
-                    HeightRequest="170"
-                    Clicked="OnGestaoDevolucoesClicked" />
+                <!-- Histórico de Empréstimos -->  
+                <Frame Grid.Row="1" Grid.Column="1"  
+                       BackgroundColor="White"  
+                       CornerRadius="20"  
+                       Padding="10"  
+                       HeightRequest="170"  
+                       HasShadow="True">  
+                    <VerticalStackLayout>  
+                        <Image Source="historico.jpg" HeightRequest="60" HorizontalOptions="Center" />  
+                        <Button Text="Histórico de Empréstimo"  
+                                Clicked="OnHistoricoEmprestimosClicked"  
+                                BackgroundColor="Transparent"  
+                                TextColor="Black"  
+                                FontSize="28"  
+                                FontAttributes="Bold"  
+                                HorizontalOptions="Center"/>  
+                    </VerticalStackLayout>  
+                </Frame>  
 
-            <!-- Card 5 -->
-            <Button Grid.Row="1" Grid.Column="1"
-                    Text="Histórico de Empréstimos"
-                    BackgroundColor="#2563EB"
-                    TextColor="White"
-                    FontSize="16"
-                    CornerRadius="20"
-                    HeightRequest="170"
-                    Clicked="OnHistoricoEmprestimosClicked" />
+                <!-- Relatórios -->  
+                <Frame Grid.Row="1" Grid.Column="2"  
+                       BackgroundColor="White"  
+                       CornerRadius="20"  
+                       Padding="10"  
+                       HeightRequest="170"  
+                       HasShadow="True">  
+                    <VerticalStackLayout>  
+                        <Image Source="relatorio.jpg" HeightRequest="60" HorizontalOptions="Center" />  
+                        <Button Text="Relatórios"  
+                                Clicked="OnRelatoriosClicked"  
+                                BackgroundColor="Transparent"  
+                                TextColor="Black"  
+                                FontSize="28"  
+                                FontAttributes="Bold"  
+                                HorizontalOptions="Center"/>  
+                    </VerticalStackLayout>  
+                </Frame>  
 
-            <!-- Card 6 -->
-            <Button Grid.Row="1" Grid.Column="2"
-                    Text="Relatórios"
-                    BackgroundColor="#2563EB"
-                    TextColor="White"
-                    FontSize="16"
-                    CornerRadius="20"
-                    HeightRequest="170"
-                    Clicked="OnRelatoriosClicked" />
-        </Grid>
-
-    </VerticalStackLayout>
+            </Grid>  
+        </ScrollView>  
+    </VerticalStackLayout>  
 </ContentPage>

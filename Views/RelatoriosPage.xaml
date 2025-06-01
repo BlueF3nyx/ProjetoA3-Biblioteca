@@ -1,0 +1,98 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BibliotecaAPP.Views.RelatoriosPage"
+             Title="Relatórios"
+             BackgroundColor="White">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="30">
+    
+            <!-- Título da página -->
+            <Label Text="Relatórios"
+                   FontAttributes="Bold"
+                   FontSize="28"
+                   TextColor="#222222"
+                   HorizontalOptions="Center" />
+
+            <!-- Seção de filtros -->
+            <Frame BackgroundColor="#F9F9F9"
+                   CornerRadius="14"
+                   Padding="20"
+                   HasShadow="True"
+                   BorderColor="#DDDDDD">
+
+                <VerticalStackLayout Spacing="20">
+
+                    <!-- Filtro Período -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Período" FontAttributes="Bold" FontSize="16" TextColor="#333333" />
+                        <HorizontalStackLayout Spacing="15">
+
+                            <DatePicker x:Name="dataInicioPicker"
+                                        Format="dd/MM/yyyy"
+                                        HorizontalOptions="FillAndExpand"
+                                        BackgroundColor="White"
+                                        TextColor="#222222"
+                                        FontSize="14"
+                                        />
+
+                            <DatePicker x:Name="dataFimPicker"
+                                        Format="dd/MM/yyyy"
+                                        HorizontalOptions="FillAndExpand"
+                                        BackgroundColor="White"
+                                        TextColor="#222222"
+                                        FontSize="14"
+                                        />
+
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- Filtro Tipo de Relatório -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Tipo de Relatório" FontAttributes="Bold" FontSize="16" TextColor="#333333" />
+                        <Picker x:Name="tipoRelatorioPicker"
+                                Title="Selecione o tipo"
+                                BackgroundColor="White"
+                                TextColor="#222222"
+                                FontSize="14">
+                            <Picker.Items>
+                                <x:String>Empréstimos</x:String>
+                                <x:String>Devoluções</x:String>
+                                <x:String>Multas</x:String>
+                                <x:String>Livros Mais Emprestados</x:String>
+                            </Picker.Items>
+                        </Picker>
+                    </VerticalStackLayout>
+
+                    <!-- Botão Gerar -->
+                    <Button Text="Gerar Relatório"
+                            BackgroundColor="#007BFF"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="12"
+                            HeightRequest="44"
+                            Clicked="OnGerarRelatorioClicked" />
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Área para exibir relatório -->
+            <Frame BackgroundColor="#F9F9F9"
+                   CornerRadius="14"
+                   Padding="20"
+                   HasShadow="True"
+                   BorderColor="#DDDDDD"
+                   HeightRequest="280">
+
+                <ScrollView>
+                    <Label x:Name="relatorioLabel"
+                           Text="O relatório será exibido aqui."
+                           TextColor="#222222"
+                           FontSize="14" />
+                </ScrollView>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
