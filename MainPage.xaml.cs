@@ -21,7 +21,7 @@ public partial class MainPage : ContentPage
 
     private void OnRegistroEmprestimosClicked(object sender, EventArgs e)
     {
-        DisplayAlert("Aviso", "Funcionalidade em construção.", "OK");
+        Navigation.PushAsync(new RegistroEmprestimoPage());
     }
 
     private void OnGestaoDevolucoesClicked(object sender, EventArgs e)

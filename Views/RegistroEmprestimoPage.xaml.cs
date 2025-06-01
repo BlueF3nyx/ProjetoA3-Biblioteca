@@ -10,10 +10,10 @@ namespace BibliotecaAPP.Views
         // Classe para representar os itens na lista de emprestimos
         public class EmprestimoItem
         {
-            public string Livro { get; set; }
-            public int Duracao { get; set; }
-            public DateTime DataEmprestimo { get; set; }
-            public DateTime DataDevolucao { get; set; }
+            public string? Livro { get; set; }
+            public int? Duracao { get; set; }
+            public DateTime? DataEmprestimo { get; set; }
+            public DateTime? DataDevolucao { get; set; }
         }
 
         // Coleção observável para os itens
@@ -22,16 +22,16 @@ namespace BibliotecaAPP.Views
         public RegistroEmprestimoPage()
         {
             InitializeComponent();
-            
+
             // Definir a fonte de dados para a CollectionView
             LivrosCollectionView.ItemsSource = ItensEmprestimo;
-            
+
             // Configurar data inicial para hoje
             DatePickerEmprestimo.Date = DateTime.Today;
-            
+
             // Calcular data de devolucao
             CalcularDataDevolucao();
-            
+
             // Eventos para calcular a data de devolucao quando valores mudarem
             DatePickerEmprestimo.DateSelected += (s, e) => CalcularDataDevolucao();
             TextBoxDuracao.TextChanged += (s, e) => CalcularDataDevolucao();
@@ -52,7 +52,7 @@ namespace BibliotecaAPP.Views
         private void AdicionarLivro_Click(object sender, EventArgs e)
         {
             // Validar campos
-            if (ComboBoxLivros.SelectedItem == null || 
+            if (ComboBoxLivros.SelectedItem == null ||
                 string.IsNullOrWhiteSpace(TextBoxDuracao.Text) ||
                 !int.TryParse(TextBoxDuracao.Text, out int duracao))
             {
@@ -91,10 +91,10 @@ namespace BibliotecaAPP.Views
 
             // Aqui voce implementaria a ligica para salvar no banco de dados
             string membro = ComboBoxMembros.SelectedItem.ToString();
-            
+
             // Exemplo de mensagem de sucesso
             await DisplayAlert("Sucesso", $"Empréstimo registrado para {membro} com {ItensEmprestimo.Count} livro(s).", "OK");
-            
+
             // Limpar todos os campos
             ComboBoxMembros.SelectedItem = null;
             ItensEmprestimo.Clear();

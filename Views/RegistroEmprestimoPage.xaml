@@ -1,170 +1,153 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BibliotecaAPP.Views.RegistroEmprestimoPage"
-             Title="Registrar Emprestimo"
+             Title="Registro de Empréstimo"
              BackgroundColor="Transparent"
              NavigationPage.HasNavigationBar="False">
 
-    <Grid>
-        <!-- Imagem de fundo -->
-        <Image Source="login_biblioteca.jpg"
+	<Grid>
+		<!-- Imagem de fundo -->
+		<Image Source="login_biblioteca.jpg"
                Aspect="AspectFill"
                Opacity="1.0"
                IsOpaque="True" />
 
-        <!-- Camada azul escura translucida -->
-        <BoxView BackgroundColor="#0B1D49"
+		<!-- Camada escura por cima -->
+		<BoxView BackgroundColor="#0B1D49"
                  Opacity="0.75"
                  InputTransparent="True" />
 
-        <!-- Conteudo principal -->
-        <ScrollView>
-            <VerticalStackLayout Spacing="20" Padding="30" VerticalOptions="Center">
+		<ScrollView>
+			<VerticalStackLayout Padding="30"
+                                 Spacing="20"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center">
 
-                <!-- Titulo -->
-                <Label Text="Registrar Emprestimo"
+				<Label Text="Registro de Empréstimo"
                        FontSize="24"
-                       TextColor="White"
                        FontAttributes="Bold"
+                       TextColor="White"
                        HorizontalOptions="Center" />
 
-                <!-- Selecao de Membro -->
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Membro:" TextColor="White" FontSize="14" />
-                    <Picker x:Name="ComboBoxMembros"
-                            Title="Selecione um membro"
+				<!-- Membro -->
+				<VerticalStackLayout Spacing="5">
+					<Label Text="Membro" TextColor="White" FontSize="14" />
+					<Picker x:Name="ComboBoxMembros"
+                            Title="Selecionar Membro"
                             BackgroundColor="White"
                             TextColor="Black"
-                            HeightRequest="40">
-                        <!-- Exemplo de itens - substitua por dados reais do banco -->
-                        <Picker.Items>
-                            <x:String>Joao Silva</x:String>
-                            <x:String>Maria Oliveira</x:String>
-                            <x:String>Carlos Santos</x:String>
-                        </Picker.Items>
-                    </Picker>
-                </VerticalStackLayout>
+                            HeightRequest="40" />
+				</VerticalStackLayout>
 
-                <!-- Grupo: Livro  Duracao -->
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                    <!-- Livro -->
-                    <VerticalStackLayout Spacing="5" Grid.Column="0">
-                        <Label Text="Livro:" TextColor="White" FontSize="14" />
-                        <Picker x:Name="ComboBoxLivros"
-                                Title="Selecione um livro"
+				<!-- Livro e duração -->
+				<VerticalStackLayout Spacing="5">
+					<Label Text="Livro e Duração" TextColor="White" FontSize="14" />
+					<Grid ColumnSpacing="10">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="2*" />
+							<ColumnDefinition Width="1*" />
+						</Grid.ColumnDefinitions>
+
+						<Picker x:Name="ComboBoxLivros"
+                                Grid.Column="0"
+                                Title="Selecionar Livro"
                                 BackgroundColor="White"
                                 TextColor="Black"
-                                HeightRequest="40">
-                            <!-- Exemplo de itens - substitua por dados reais do banco -->
-                            <Picker.Items>
-                                <x:String>Dom Quixote</x:String>
-                                <x:String>1984</x:String>
-                                <x:String>O Senhor dos Aneis</x:String>
-                            </Picker.Items>
-                        </Picker>
-                    </VerticalStackLayout>
+                                HeightRequest="40" />
 
-                    <!-- Duracao -->
-                    <VerticalStackLayout Spacing="5" Grid.Column="1">
-                        <Label Text="Duracao (dias):" TextColor="White" FontSize="14" />
-                        <Entry x:Name="TextBoxDuracao"
+						<Entry x:Name="TextBoxDuracao"
+                               Grid.Column="1"
+                               Placeholder="Dias"
                                Keyboard="Numeric"
                                BackgroundColor="White"
                                TextColor="Black"
-                               Placeholder="Ex: 7"
-                               PlaceholderColor="Gray"
-                               HeightRequest="40"
-                               HorizontalTextAlignment="Center" />
-                    </VerticalStackLayout>
-                </Grid>
+                               HeightRequest="40" />
+					</Grid>
+				</VerticalStackLayout>
 
-                <!-- Grupo: Datas -->
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                    <!-- Data Emprestimo -->
-                    <VerticalStackLayout Spacing="5" Grid.Column="0">
-                        <Label Text="Data Emprestimo:" TextColor="White" FontSize="14" />
-                        <DatePicker x:Name="DatePickerEmprestimo"
+				<!-- Datas -->
+				<VerticalStackLayout Spacing="5">
+					<Label Text="Datas" TextColor="White" FontSize="14" />
+					<Grid ColumnSpacing="10">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="1*" />
+							<ColumnDefinition Width="1*" />
+						</Grid.ColumnDefinitions>
+
+						<DatePicker x:Name="DatePickerEmprestimo"
+                                    Grid.Column="0"
                                     BackgroundColor="White"
                                     TextColor="Black"
                                     HeightRequest="40" />
-                    </VerticalStackLayout>
 
-                    <!-- Data Devolucao -->
-                    <VerticalStackLayout Spacing="5" Grid.Column="1">
-                        <Label Text="Data Devolucao:" TextColor="White" FontSize="14" />
-                        <DatePicker x:Name="DatePickerDevolucao"
+						<DatePicker x:Name="DatePickerDevolucao"
+                                    Grid.Column="1"
                                     BackgroundColor="White"
                                     TextColor="Black"
-                                    HeightRequest="40"
-                                    IsEnabled="False" />
-                    </VerticalStackLayout>
-                </Grid>
+                                    HeightRequest="40" />
+					</Grid>
+				</VerticalStackLayout>
 
-                <!-- Botao Adicionar Livro -->
-                <Button Text="Adicionar Livro"
+				<!-- Adicionar Livro -->
+				<Button Text="Adicionar Livro à Lista"
+                        Clicked="AdicionarLivro_Click"
                         BackgroundColor="#F97316"
                         TextColor="White"
                         FontAttributes="Bold"
                         CornerRadius="5"
-                        HeightRequest="45"
-                        Clicked="AdicionarLivro_Click" />
+                        HeightRequest="45" />
 
-                <!-- Lista de livros -->
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Livros Emprestados:" 
-                           TextColor="White" 
-                           FontSize="14" 
-                           FontAttributes="Bold" />
+				<!-- Lista de livros -->
+				<Label Text="Livros Emprestados" TextColor="White" FontAttributes="Bold" />
+				<Frame BackgroundColor="White"
+                       CornerRadius="5"
+                       Padding="10"
+                       HasShadow="True"
+                       HeightRequest="150">
+					<CollectionView x:Name="LivrosCollectionView">
+						<CollectionView.ItemTemplate>
+							<DataTemplate>
+								<Grid Padding="5">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="2*" />
+										<ColumnDefinition Width="1*" />
+									</Grid.ColumnDefinitions>
+									<Label Text="{Binding Livro}" FontAttributes="Bold" TextColor="Black" />
+									<Label Text="{Binding Duracao}" Grid.Column="1" HorizontalTextAlignment="End" TextColor="Gray" />
+								</Grid>
+							</DataTemplate>
+						</CollectionView.ItemTemplate>
+					</CollectionView>
+				</Frame>
 
-                    <CollectionView x:Name="LivrosCollectionView"
-                                   HeightRequest="150"
-                                   BackgroundColor="#FFFFFF20">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Padding="10" ColumnDefinitions="*,100,120,120">
-                                    <Label Text="{Binding Livro}" 
-                                           TextColor="White"
-                                           Grid.Column="0" />
-                                    <Label Text="{Binding Duracao}" 
-                                           TextColor="White"
-                                           HorizontalTextAlignment="Center"
-                                           Grid.Column="1" />
-                                    <Label Text="{Binding DataEmprestimo, StringFormat='{0:dd/MM/yyyy}'}" 
-                                           TextColor="White"
-                                           HorizontalTextAlignment="Center"
-                                           Grid.Column="2" />
-                                    <Label Text="{Binding DataDevolucao, StringFormat='{0:dd/MM/yyyy}'}" 
-                                           TextColor="White"
-                                           HorizontalTextAlignment="Center"
-                                           Grid.Column="3" />
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
+				<!-- Botões finais -->
+				<Grid ColumnSpacing="10">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*" />
+						<ColumnDefinition Width="1*" />
+					</Grid.ColumnDefinitions>
 
-                <!-- Botoes Confirmar e Cancelar -->
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
-                    <Button Text="Confirmar"
-                            BackgroundColor="#4CAF50"
-                            TextColor="White"
-                            FontAttributes="Bold"
-                            CornerRadius="5"
-                            HeightRequest="45"
+					<Button Grid.Column="0"
+                            Text="Confirmar"
                             Clicked="Confirmar_Click"
-                            Grid.Column="0" />
-
-                    <Button Text="Cancelar"
-                            BackgroundColor="#F44336"
+                            BackgroundColor="#F97316"
                             TextColor="White"
                             FontAttributes="Bold"
                             CornerRadius="5"
-                            HeightRequest="45"
-                            Clicked="Cancelar_Click"
-                            Grid.Column="1" />
-                </Grid>
+                            HeightRequest="45" />
 
-            </VerticalStackLayout>
-        </ScrollView>
-    </Grid>
+					<Button Grid.Column="1"
+                            Text="Cancelar"
+                            Clicked="Cancelar_Click"
+                            BackgroundColor="White"
+                            TextColor="Black"
+                            BorderColor="Gray"
+                            BorderWidth="1"
+                            CornerRadius="5"
+                            HeightRequest="45" />
+				</Grid>
+
+			</VerticalStackLayout>
+		</ScrollView>
+	</Grid>
 </ContentPage>
