@@ -7,7 +7,7 @@
 
     <Grid>
         <!-- Imagem de fundo -->
-        <Image Source="login_biblioteca.jpg"
+        <Image Source="imagembiblioteca.jpg"
                Aspect="AspectFill"
                Opacity="1.0"
                IsOpaque="True" />
