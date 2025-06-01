@@ -1,38 +1,49 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BibliotecaAPP.MainPage"
-             >
+             x:Class="BibliotecaAPP.MainPage">
 
     <VerticalStackLayout Spacing="0">
 
         <!-- Header -->
-        <Grid BackgroundColor="#1F2937" Padding="16" HeightRequest="60">
+        <Grid BackgroundColor="#1F2937" HeightRequest="188" Padding="40,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
+            <!-- Título do sistema -->
             <Label Text="Sistema de Biblioteca"
-                   FontSize="20"
+                   FontSize="28"
                    TextColor="White"
-                   VerticalOptions="Center" />
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start" />
 
+            <!-- Nome do usuário -->
             <Label Grid.Column="1"
                    Text="Usuário"
-                   FontSize="14"
+                   FontSize="16"
                    TextColor="White"
                    VerticalOptions="Center"
                    Margin="20,0" />
 
+            <!-- Botão de sair -->
             <Button Grid.Column="2"
                     Text="Sair"
                     TextColor="White"
                     BackgroundColor="Transparent"
+                    VerticalOptions="Center"
                     Clicked="OnLogoutClicked" />
         </Grid>
+
+        <!-- Bem-vindo -->
+        <Label Text="Bem-Vindo!"
+               FontSize="32"
+               TextColor="Black"
+               Margin="40,20,0,10" />
+
         <!-- Dashboard Cards -->
-        <Grid Padding="16" RowSpacing="20" ColumnSpacing="20">
+        <Grid Padding="40" RowSpacing="30" ColumnSpacing="30">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -49,8 +60,8 @@
                     BackgroundColor="#2563EB"
                     TextColor="White"
                     FontSize="16"
-                    CornerRadius="12"
-                    HeightRequest="120"
+                    CornerRadius="20"
+                    HeightRequest="170"
                     Clicked="OnCadastroLivrosClicked" />
 
             <!-- Card 2 -->
@@ -59,8 +70,8 @@
                     BackgroundColor="#2563EB"
                     TextColor="White"
                     FontSize="16"
-                    CornerRadius="12"
-                    HeightRequest="120"
+                    CornerRadius="20"
+                    HeightRequest="170"
                     Clicked="OnCadastroMembrosClicked" />
 
             <!-- Card 3 -->
@@ -69,8 +80,8 @@
                     BackgroundColor="#2563EB"
                     TextColor="White"
                     FontSize="16"
-                    CornerRadius="12"
-                    HeightRequest="120"
+                    CornerRadius="20"
+                    HeightRequest="170"
                     Clicked="OnRegistroEmprestimosClicked" />
 
             <!-- Card 4 -->
@@ -79,8 +90,8 @@
                     BackgroundColor="#2563EB"
                     TextColor="White"
                     FontSize="16"
-                    CornerRadius="12"
-                    HeightRequest="120"
+                    CornerRadius="20"
+                    HeightRequest="170"
                     Clicked="OnGestaoDevolucoesClicked" />
 
             <!-- Card 5 -->
@@ -89,8 +100,8 @@
                     BackgroundColor="#2563EB"
                     TextColor="White"
                     FontSize="16"
-                    CornerRadius="12"
-                    HeightRequest="120"
+                    CornerRadius="20"
+                    HeightRequest="170"
                     Clicked="OnHistoricoEmprestimosClicked" />
 
             <!-- Card 6 -->
@@ -99,8 +110,8 @@
                     BackgroundColor="#2563EB"
                     TextColor="White"
                     FontSize="16"
-                    CornerRadius="12"
-                    HeightRequest="120"
+                    CornerRadius="20"
+                    HeightRequest="170"
                     Clicked="OnRelatoriosClicked" />
         </Grid>
 
