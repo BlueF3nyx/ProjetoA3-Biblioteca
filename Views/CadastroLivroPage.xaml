@@ -2,34 +2,95 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BibliotecaAPP.Views.CadastroLivroPage"
              Title="Cadastro de Livros"
-             BackgroundColor="#f5f5f5">
+             BackgroundColor="Transparent"
+             NavigationPage.HasNavigationBar="False">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="30" Spacing="20">
+    <Grid>
+        <!-- Imagem de fundo -->
+        <Image Source="login_biblioteca.jpg"
+               Aspect="AspectFill"
+               Opacity="1.0"
+               IsOpaque="True" />
 
-            <Label Text="Cadastro de Livro"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" />
+        <!-- Camada azul escura translucida -->
+        <BoxView BackgroundColor="#0B1D49"
+                 Opacity="0.75"
+                 InputTransparent="True" />
 
-            <Entry Placeholder="Titulo" x:Name="TituloEntry" />
-            <Entry Placeholder="Autor" x:Name="AutorEntry" />
-            <Entry Placeholder="Categoria" x:Name="CategoriaEntry" />
+        <!-- Conteudo central com ScrollView -->
+        <ScrollView>
+            <VerticalStackLayout VerticalOptions="Center" 
+                                 HorizontalOptions="Center" 
+                                 Spacing="20" 
+                                 Padding="30">
 
-            <Picker Title="Disponibilidade" x:Name="DisponibilidadePicker">
-                <Picker.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>Disponível</x:String>
-                        <x:String>Emprestado</x:String>
-                    </x:Array>
-                </Picker.ItemsSource>
-            </Picker>
+                <!-- Titulo -->
+                <Label Text="Cadastro de Livro"
+                       FontSize="24"
+                       TextColor="White"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center" />
 
-            <Button Text="Salvar Livro"
-                    BackgroundColor="#4CAF50"
-                    TextColor="White"
-                    Clicked="OnSalvarLivroClicked" />
+               
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Título do Livro" TextColor="White" FontSize="14" />
+                    <Entry x:Name="TituloEntry"
+                           Placeholder="Digite o título"
+                           BackgroundColor="White"
+                           TextColor="Black"
+                           PlaceholderColor="Gray"
+                           HeightRequest="40" />
+                </VerticalStackLayout>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                <!-- Campo Autor -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Autor" TextColor="White" FontSize="14" />
+                    <Entry x:Name="AutorEntry"
+                           Placeholder="Digite o autor"
+                           BackgroundColor="White"
+                           TextColor="Black"
+                           PlaceholderColor="Gray"
+                           HeightRequest="40" />
+                </VerticalStackLayout>
+
+                <!-- Campo Categoria -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Categoria" TextColor="White" FontSize="14" />
+                    <Entry x:Name="CategoriaEntry"
+                           Placeholder="Digite a categoria"
+                           BackgroundColor="White"
+                           TextColor="Black"
+                           PlaceholderColor="Gray"
+                           HeightRequest="40" />
+                </VerticalStackLayout>
+
+                <!-- Campo Disponibilidade -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Disponibilidade" TextColor="White" FontSize="14" />
+                    <Picker x:Name="DisponibilidadePicker"
+                            Title="Selecione a disponibilidade"
+                            BackgroundColor="White"
+                            TextColor="Black"
+                            HeightRequest="40">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Disponível</x:String>
+                                <x:String>Emprestado</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                </VerticalStackLayout>
+
+                
+                <Button Text="Salvar Livro"
+                        BackgroundColor="#F97316"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="5"
+                        HeightRequest="45"
+                        Clicked="OnSalvarLivroClicked" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>
