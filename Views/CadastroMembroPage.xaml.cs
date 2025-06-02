@@ -1,11 +1,16 @@
-﻿
+﻿using BibliotecaAPP.Data;
+using BibliotecaAPP.Models;
+
 namespace BibliotecaAPP.Views
 {
     public partial class CadastroMembroPage : ContentPage
     {
+        private readonly IMembroRepository _membroRepository;
+
         public CadastroMembroPage()
         {
             InitializeComponent();
+            _membroRepository = new MembroRepository(); // ideal: injeção de dependência
         }
 
         private async void OnSalvarMembroClicked(object sender, EventArgs e)
@@ -15,7 +20,6 @@ namespace BibliotecaAPP.Views
             string telefone = TelefoneEntry.Text;
             string email = EmailEntry.Text;
 
-            // Validação simples
             if (string.IsNullOrWhiteSpace(nome) || string.IsNullOrWhiteSpace(cpf) ||
                 string.IsNullOrWhiteSpace(telefone) || string.IsNullOrWhiteSpace(email))
             {
@@ -23,14 +27,28 @@ namespace BibliotecaAPP.Views
                 return;
             }
 
-            // Aqui futuramente você chamará o repositório para salvar no banco
-            await DisplayAlert("Sucesso", $"Membro cadastrado:\n\nNome: {nome}\nCPF: {cpf}\nTelefone: {telefone}\nEmail: {email}", "OK");
+            var novoMembro = new Membro
+            {
+                Nome = nome,
+                CPF = cpf,
+                Telefone = telefone,
+                Email = email
+            };
 
-            // Limpar campos
-            NomeEntry.Text = "";
-            CpfEntry.Text = "";
-            TelefoneEntry.Text = "";
-            EmailEntry.Text = "";
+            try
+            {
+                await _membroRepository.AdicionarAsync(novoMembro);
+                await DisplayAlert("Sucesso", "Membro cadastrado com sucesso!", "OK");
+
+                NomeEntry.Text = "";
+                CpfEntry.Text = "";
+                TelefoneEntry.Text = "";
+                EmailEntry.Text = "";
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Falha ao cadastrar membro: {ex.Message}", "OK");
+            }
         }
     }
 }

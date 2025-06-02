@@ -15,6 +15,7 @@
                             Title="Selecione o membro"
                             BackgroundColor="Transparent"
                             TextColor="Black"
+                            FontSize="20"
                              />
                 </Frame>
             </VerticalStackLayout>
@@ -67,7 +68,7 @@
                     </VerticalStackLayout>
                 </VerticalStackLayout>
 
-                <VerticalStackLayout Spacing="8" HorizontalOptions="End">
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
                     <Label Text="Estado do Livro:" FontAttributes="Bold" TextColor="Black"/>
                     <Frame BackgroundColor="White" BorderColor="#DDD" CornerRadius="8" Padding="0" HasShadow="True" >
                         <Picker x:Name="estadoLivroPicker" Title="Selecione o estado"
