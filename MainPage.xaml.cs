@@ -1,4 +1,6 @@
 ﻿using BibliotecaAPP.Views;
+using BibliotecaAppBase;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BibliotecaAPP;
 
@@ -19,9 +21,11 @@ public partial class MainPage : ContentPage
         Navigation.PushAsync(new CadastroMembroPage());
     }
 
-    private void OnRegistroEmprestimosClicked(object sender, EventArgs e)
+    private async void OnRegistroEmprestimosClicked(object sender, EventArgs e)
     {
-        Navigation.PushAsync(new RegistroEmprestimoPage());
+        // Fix: Access the Services property from the App class directly  
+        var page = ActivatorUtilities.CreateInstance<RegistroEmprestimoPage>(App.Services);
+        await Navigation.PushAsync(page);
     }
 
     private void OnGestaoDevolucoesClicked(object sender, EventArgs e)
@@ -41,7 +45,7 @@ public partial class MainPage : ContentPage
 
     private void OnLogoutClicked(object sender, EventArgs e)
     {
-        // Navegar para a tela de login
+        // Navegar para a tela de login  
         Application.Current.MainPage = new LoginPage();
     }
 }

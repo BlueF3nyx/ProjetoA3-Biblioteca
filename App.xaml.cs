@@ -5,9 +5,14 @@ namespace BibliotecaAppBase;
 
 public partial class App : Application
 {
-    public App()
+    public static IServiceProvider? Services { get; set; }
+
+    public App(IServiceProvider services)
     {
         InitializeComponent();
-        MainPage = new NavigationPage(new LoginPage());
+
+        Services = services;
+
+        MainPage = new NavigationPage(new MainPage());
     }
 }
