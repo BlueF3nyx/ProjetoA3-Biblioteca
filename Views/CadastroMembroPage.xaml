@@ -77,78 +77,95 @@
             <!-- Formulario para criar/editar -->
             <ScrollView>
                 <VerticalStackLayout VerticalOptions="Center" 
-                                     HorizontalOptions="Center" 
-                                     Spacing="20" 
-                                     Padding="10">
+                       HorizontalOptions="Center" 
+                       Spacing="20" 
+                       Padding="10">
 
                     <!-- Campo Nome -->
-                    <VerticalStackLayout Spacing="5">
+                    <VerticalStackLayout Spacing="5" WidthRequest="350">
                         <Label Text="Nome Completo" TextColor="White" FontSize="14" />
                         <Entry x:Name="NomeEntry"
-                               Placeholder="Digite o nome completo"
-                               BackgroundColor="White"
-                               TextColor="Black"
-                               PlaceholderColor="Gray"
-                               HeightRequest="60" />
+             Placeholder="Digite o nome completo"
+             BackgroundColor="White"
+             TextColor="Black"
+             PlaceholderColor="Gray"
+             HeightRequest="50"
+             WidthRequest="350"
+             HorizontalOptions="Start"
+             MaxLength="100" />
                     </VerticalStackLayout>
 
                     <!-- Campo CPF -->
-                    <VerticalStackLayout Spacing="5">
+                    <VerticalStackLayout Spacing="5" WidthRequest="350">
                         <Label Text="CPF" TextColor="White" FontSize="14" />
                         <Entry x:Name="CpfEntry"
-                               Placeholder="Digite o CPF"
-                               Keyboard="Numeric"
-                               BackgroundColor="White"
-                               TextColor="Black"
-                               PlaceholderColor="Gray"
-                               HeightRequest="40" />
+             Placeholder="Digite o CPF"
+             Keyboard="Numeric"
+             BackgroundColor="White"
+             TextColor="Black"
+             PlaceholderColor="Gray"
+             HeightRequest="50"
+             WidthRequest="350"
+             HorizontalOptions="Start"
+             MaxLength="14" />
                     </VerticalStackLayout>
 
                     <!-- Campo Telefone -->
-                    <VerticalStackLayout Spacing="5">
+                    <VerticalStackLayout Spacing="5" WidthRequest="350">
                         <Label Text="Telefone" TextColor="White" FontSize="14" />
                         <Entry x:Name="TelefoneEntry"
-                               Placeholder="Digite o telefone"
-                               Keyboard="Telephone"
-                               BackgroundColor="White"
-                               TextColor="Black"
-                               PlaceholderColor="Gray"
-                               HeightRequest="40" />
+             Placeholder="Digite o telefone"
+             Keyboard="Telephone"
+             BackgroundColor="White"
+             TextColor="Black"
+             PlaceholderColor="Gray"
+             HeightRequest="50"
+             WidthRequest="350"
+             HorizontalOptions="Start"
+             MaxLength="20" />
                     </VerticalStackLayout>
 
                     <!-- Campo Email -->
-                    <VerticalStackLayout Spacing="5">
+                    <VerticalStackLayout Spacing="5" WidthRequest="350">
                         <Label Text="Email" TextColor="White" FontSize="14" />
                         <Entry x:Name="EmailEntry"
-                               Placeholder="Digite o email"
-                               Keyboard="Email"
-                               BackgroundColor="White"
-                               TextColor="Black"
-                               PlaceholderColor="Gray"
-                               HeightRequest="40" />
+             Placeholder="Digite o email"
+             Keyboard="Email"
+             BackgroundColor="White"
+             TextColor="Black"
+             PlaceholderColor="Gray"
+             HeightRequest="50"
+             WidthRequest="350"
+             HorizontalOptions="Start"
+             MaxLength="255" />
                     </VerticalStackLayout>
 
                     <Button x:Name="SalvarButton"
-                            Text="Salvar Membro"
-                            BackgroundColor="#F97316"
-                            TextColor="White"
-                            FontAttributes="Bold"
-                            CornerRadius="5"
-                            HeightRequest="45"
-                            Clicked="OnSalvarMembroClicked" />
+            Text="Salvar Membro"
+            BackgroundColor="#F97316"
+            TextColor="White"
+            FontAttributes="Bold"
+            CornerRadius="5"
+            HeightRequest="45"
+            WidthRequest="350"
+            HorizontalOptions="Start"
+            Clicked="OnSalvarMembroClicked" />
 
                     <Button x:Name="CancelarEdicaoButton"
-                            Text="Cancelar"
-                            BackgroundColor="Gray"
-                            TextColor="White"
-                            FontAttributes="Bold"
-                            CornerRadius="5"
-                            HeightRequest="45"
-                            Clicked="OnCancelarEdicaoClicked"
-                            IsVisible="False" />
+            Text="Cancelar"
+            BackgroundColor="Gray"
+            TextColor="White"
+            FontAttributes="Bold"
+            CornerRadius="5"
+            HeightRequest="45"
+            WidthRequest="350"
+            HorizontalOptions="Start"
+            Clicked="OnCancelarEdicaoClicked"
+            IsVisible="False" />
 
                 </VerticalStackLayout>
             </ScrollView>
+
 
         </VerticalStackLayout>
     </Grid>

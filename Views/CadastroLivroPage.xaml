@@ -67,7 +67,6 @@
                                             Clicked="OnExcluirLivroClicked" />
                                 </Grid>
                             </Border>
-
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -78,49 +77,61 @@
                 <VerticalStackLayout VerticalOptions="Center" 
                                      HorizontalOptions="Center" 
                                      Spacing="20" 
-                                     Padding="10">
+                                     Padding="10"
+                                     WidthRequest="350">
+                    <!-- largura fixa para todo formulário -->
 
                     <!-- Campo Título -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Título" TextColor="White" FontSize="14" />
                         <Entry x:Name="TituloEntry"
-                               Placeholder="Digite o título do livro"
-                               BackgroundColor="White"
-                               TextColor="Black"
-                               PlaceholderColor="Gray"
-                               HeightRequest="60" />
+                           Placeholder="Digite o título do livro"
+                           BackgroundColor="White"
+                           TextColor="Black"
+                           PlaceholderColor="Gray"
+                           HeightRequest="40"
+                           WidthRequest="350"
+                           HorizontalOptions="Start"
+                           MaxLength="255" />
                     </VerticalStackLayout>
 
                     <!-- Campo Autor -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Autor" TextColor="White" FontSize="14" />
                         <Entry x:Name="AutorEntry"
-                               Placeholder="Digite o autor"
-                               BackgroundColor="White"
-                               TextColor="Black"
-                               PlaceholderColor="Gray"
-                               HeightRequest="40" />
+                           Placeholder="Digite o autor"
+                           BackgroundColor="White"
+                           TextColor="Black"
+                           PlaceholderColor="Gray"
+                           HeightRequest="40"
+                           WidthRequest="350"
+                           HorizontalOptions="Start"
+                           MaxLength="255" />
                     </VerticalStackLayout>
 
                     <!-- Campo Categoria -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Categoria" TextColor="White" FontSize="14" />
                         <Entry x:Name="CategoriaEntry"
-                                Placeholder="Digite a categoria"
-                                BackgroundColor="White"
-                                TextColor="Black"
-                                 PlaceholderColor="Gray"
-                                 HeightRequest="40" />
+                           Placeholder="Digite a categoria"
+                           BackgroundColor="White"
+                           TextColor="Black"
+                           PlaceholderColor="Gray"
+                           HeightRequest="40"
+                           WidthRequest="350"
+                           HorizontalOptions="Start"
+                           MaxLength="100" />
                     </VerticalStackLayout>
 
                     <!-- Campo Disponibilidade -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Disponibilidade" TextColor="White" FontSize="14" />
                         <Picker x:Name="DisponibilidadePicker"
-                                         
-                                         BackgroundColor="White"
-                                         TextColor="Black"
-                                         HeightRequest="40">
+                            BackgroundColor="White"
+                            TextColor="Black"
+                            HeightRequest="40"
+                            WidthRequest="350"
+                            HorizontalOptions="Start">
                             <Picker.Items>
                                 <x:String>Disponível</x:String>
                                 <x:String>Emprestado</x:String>
@@ -128,25 +139,28 @@
                         </Picker>
                     </VerticalStackLayout>
 
-
                     <Button x:Name="SalvarButton"
-                            Text="Salvar Livro"
-                            BackgroundColor="#F97316"
-                            TextColor="White"
-                            FontAttributes="Bold"
-                            CornerRadius="5"
-                            HeightRequest="45"
-                            Clicked="OnSalvarLivroClicked" />
+                        Text="Salvar Livro"
+                        BackgroundColor="#F97316"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="5"
+                        HeightRequest="45"
+                        WidthRequest="350"
+                        HorizontalOptions="Start"
+                        Clicked="OnSalvarLivroClicked" />
 
                     <Button x:Name="CancelarEdicaoButton"
-                            Text="Cancelar"
-                            BackgroundColor="Gray"
-                            TextColor="White"
-                            FontAttributes="Bold"
-                            CornerRadius="5"
-                            HeightRequest="45"
-                            Clicked="OnCancelarEdicaoClicked"
-                            IsVisible="False" />
+                        Text="Cancelar"
+                        BackgroundColor="Gray"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="5"
+                        HeightRequest="45"
+                        WidthRequest="350"
+                        HorizontalOptions="Start"
+                        Clicked="OnCancelarEdicaoClicked"
+                        IsVisible="False" />
 
                 </VerticalStackLayout>
             </ScrollView>

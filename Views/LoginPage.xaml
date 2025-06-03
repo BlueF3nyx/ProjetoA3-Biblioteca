@@ -17,7 +17,7 @@
                  InputTransparent="True" />
 
         <!-- Conteúdo central -->
-        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20" Padding="30">
+        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20" Padding="30" WidthRequest="300">
 
             <!-- Título -->
             <Label Text="Faça seu login."
@@ -27,40 +27,42 @@
                    HorizontalOptions="Center" />
 
             <!-- Campo de e-mail -->
-            <VerticalStackLayout Spacing="5">
-                <Label Text="Email Institucional" TextColor="White" FontSize="14" />
+            <VerticalStackLayout Spacing="5" WidthRequest="300">
+                <Label Text="Email Institucional" TextColor="White" FontSize="14" LineBreakMode="NoWrap" />
                 <Entry x:Name="EmailEntry"
-                       Placeholder="Digite seu e-mail"
-                       BackgroundColor="White"
-                       TextColor="Black"
-                       PlaceholderColor="Gray"
-                       HeightRequest="40"
-                       Text="{Binding Email}"
-                       Margin="0,0,0,10" />
+               Placeholder="Digite seu e-mail"
+               BackgroundColor="White"
+               TextColor="Black"
+               PlaceholderColor="Gray"
+               HeightRequest="40"
+               WidthRequest="300"
+               MaxLength="100"
+               Text="{Binding Email}" />
             </VerticalStackLayout>
 
             <!-- Campo de senha -->
-            <VerticalStackLayout Spacing="5">
-                <Label Text="Senha" TextColor="White" FontSize="14" />
+            <VerticalStackLayout Spacing="5" WidthRequest="300">
+                <Label Text="Senha" TextColor="White" FontSize="14" LineBreakMode="NoWrap" />
                 <Entry x:Name="SenhaEntry"
-                       Placeholder="Digite sua senha"
-                       IsPassword="True"
-                       BackgroundColor="White"
-                       TextColor="Black"
-                       PlaceholderColor="Gray"
-                       HeightRequest="40"
-                      Text="{Binding Senha}"
-                       Margin="0,0,0,10" />
+               Placeholder="Digite sua senha"
+               IsPassword="True"
+               BackgroundColor="White"
+               TextColor="Black"
+               PlaceholderColor="Gray"
+               HeightRequest="40"
+               WidthRequest="300"
+               MaxLength="50"
+               Text="{Binding Senha}" />
             </VerticalStackLayout>
 
-            <!-- Botão de login -->
+        <!-- Botão de login -->
             <Button Text="LOGAR"
                     BackgroundColor="#F97316"
                     TextColor="White"
                     FontAttributes="Bold"
                     CornerRadius="5"
                     HeightRequest="45"
-                    
+                     WidthRequest="300"
                     Command="{Binding LoginCommand}"/>
             
         </VerticalStackLayout>
