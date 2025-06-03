@@ -27,7 +27,7 @@ namespace BibliotecaAPP.Data
                     Titulo = reader.GetString("Titulo"),
                     Autor = reader.GetString("Autor"),
                     Categoria = reader.GetString("Categoria"),
-                    Disponibilidade = reader.GetBoolean("Disponivel") ? "Sim" : "Não"
+                    Disponibilidade = reader.GetString("Disponibilidade")  
                 });
             }
 
@@ -39,13 +39,46 @@ namespace BibliotecaAPP.Data
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            var query = @"INSERT INTO Livros (Titulo, Autor, Categoria, Disponivel)
-                          VALUES (@Titulo, @Autor, @Categoria, @Disponivel)";
+            var query = @"INSERT INTO Livros (Titulo, Autor, Categoria, Disponibilidade)
+                          VALUES (@Titulo, @Autor, @Categoria, @Disponibilidade)";
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@Titulo", livro.Titulo);
             command.Parameters.AddWithValue("@Autor", livro.Autor);
             command.Parameters.AddWithValue("@Categoria", livro.Categoria);
-            command.Parameters.AddWithValue("@Disponivel", livro.Disponibilidade == "Sim");
+
+            // Enviar o valor de Disponibilidade diretamente, exemplo: "Disponível" ou "Emprestado"
+            command.Parameters.AddWithValue("@Disponibilidade", livro.Disponibilidade ?? "Disponível");
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        public async Task AtualizarAsync(Livro livro)
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var query = @"UPDATE Livros 
+                          SET Titulo = @Titulo, Autor = @Autor, Categoria = @Categoria, Disponibilidade = @Disponibilidade 
+                          WHERE Id = @Id";
+
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Id", livro.ID);
+            command.Parameters.AddWithValue("@Titulo", livro.Titulo);
+            command.Parameters.AddWithValue("@Autor", livro.Autor);
+            command.Parameters.AddWithValue("@Categoria", livro.Categoria);
+            command.Parameters.AddWithValue("@Disponibilidade", livro.Disponibilidade ?? "Disponível");
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        public async Task ExcluirAsync(int id)
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var query = "DELETE FROM Livros WHERE Id = @Id";
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Id", id);
 
             await command.ExecuteNonQueryAsync();
         }

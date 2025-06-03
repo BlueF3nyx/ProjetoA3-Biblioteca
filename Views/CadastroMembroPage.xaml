@@ -12,80 +12,144 @@
                Opacity="1.0"
                IsOpaque="True" />
 
-       
         <BoxView BackgroundColor="#0B1D49"
                  Opacity="0.75"
                  InputTransparent="True" />
 
-        <ScrollView>
-            <VerticalStackLayout VerticalOptions="Center" 
-                                 HorizontalOptions="Center" 
-                                 Spacing="20" 
-                                 Padding="30">
+        <VerticalStackLayout Padding="20" Spacing="10">
 
-                <Label Text="Cadastro de Membro"
-                       FontSize="24"
-                       TextColor="White"
-                       FontAttributes="Bold"
-                       HorizontalOptions="Center" />
+            <Label Text="Cadastro de Membro"
+                   FontSize="24"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
 
-                <!-- Campo Nome -->
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Nome Completo" TextColor="White" FontSize="14" />
-                    <Entry x:Name="NomeEntry"
-                           Placeholder="Digite o nome completo"
-                           BackgroundColor="White"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
-                           HeightRequest="40" />
+            <!-- Lista de membros -->
+            <ListView x:Name="MembrosListView"
+          HeightRequest="200"
+          BackgroundColor="Transparent"
+          ItemSelected="OnMembroSelecionado"
+          SelectionMode="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Border Stroke="Black" StrokeThickness="1" Background="White" Padding="5" Margin="5,2">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="3" />
+                                </Border.StrokeShape>
+
+                                <Grid ColumnDefinitions="*, Auto, Auto" VerticalOptions="Center">
+                                    <Label Text="{Binding Nome}"
+                                    VerticalOptions="Center"
+                                    LineBreakMode="NoWrap"
+                                    TextColor="Black" />
+
+                                    <Button Text="Editar"
+                                    Grid.Column="1"
+                                    BackgroundColor="#F97316"
+                                    TextColor="White"
+                                    FontAttributes="Bold"
+                                    CornerRadius="3"
+                                    Padding="10,0"
+                                    Margin="5,0,0,0"
+                                    WidthRequest="70"
+                                    Clicked="OnEditarMembroClicked" />
+
+                                    <Button Text="Excluir"
+                                    Grid.Column="2"
+                                    BackgroundColor="Red"
+                                    TextColor="White"
+                                    FontAttributes="Bold"
+                                    CornerRadius="3"
+                                    Padding="10,0"
+                                    Margin="5,0,0,0"
+                                    WidthRequest="70"
+                                    Clicked="OnExcluirMembroClicked" />
+                                </Grid>
+                            </Border>
+
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+
+            <!-- Formulario para criar/editar -->
+            <ScrollView>
+                <VerticalStackLayout VerticalOptions="Center" 
+                                     HorizontalOptions="Center" 
+                                     Spacing="20" 
+                                     Padding="10">
+
+                    <!-- Campo Nome -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Nome Completo" TextColor="White" FontSize="14" />
+                        <Entry x:Name="NomeEntry"
+                               Placeholder="Digite o nome completo"
+                               BackgroundColor="White"
+                               TextColor="Black"
+                               PlaceholderColor="Gray"
+                               HeightRequest="60" />
+                    </VerticalStackLayout>
+
+                    <!-- Campo CPF -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="CPF" TextColor="White" FontSize="14" />
+                        <Entry x:Name="CpfEntry"
+                               Placeholder="Digite o CPF"
+                               Keyboard="Numeric"
+                               BackgroundColor="White"
+                               TextColor="Black"
+                               PlaceholderColor="Gray"
+                               HeightRequest="40" />
+                    </VerticalStackLayout>
+
+                    <!-- Campo Telefone -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Telefone" TextColor="White" FontSize="14" />
+                        <Entry x:Name="TelefoneEntry"
+                               Placeholder="Digite o telefone"
+                               Keyboard="Telephone"
+                               BackgroundColor="White"
+                               TextColor="Black"
+                               PlaceholderColor="Gray"
+                               HeightRequest="40" />
+                    </VerticalStackLayout>
+
+                    <!-- Campo Email -->
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Email" TextColor="White" FontSize="14" />
+                        <Entry x:Name="EmailEntry"
+                               Placeholder="Digite o email"
+                               Keyboard="Email"
+                               BackgroundColor="White"
+                               TextColor="Black"
+                               PlaceholderColor="Gray"
+                               HeightRequest="40" />
+                    </VerticalStackLayout>
+
+                    <Button x:Name="SalvarButton"
+                            Text="Salvar Membro"
+                            BackgroundColor="#F97316"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="5"
+                            HeightRequest="45"
+                            Clicked="OnSalvarMembroClicked" />
+
+                    <Button x:Name="CancelarEdicaoButton"
+                            Text="Cancelar"
+                            BackgroundColor="Gray"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="5"
+                            HeightRequest="45"
+                            Clicked="OnCancelarEdicaoClicked"
+                            IsVisible="False" />
+
                 </VerticalStackLayout>
+            </ScrollView>
 
-                <!-- Campo CPF -->
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="CPF" TextColor="White" FontSize="14" />
-                    <Entry x:Name="CpfEntry"
-                           Placeholder="Digite o CPF"
-                           Keyboard="Numeric"
-                           BackgroundColor="White"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
-                           HeightRequest="40" />
-                </VerticalStackLayout>
-
-                <!-- Campo Telefone -->
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Telefone" TextColor="White" FontSize="14" />
-                    <Entry x:Name="TelefoneEntry"
-                           Placeholder="Digite o telefone"
-                           Keyboard="Telephone"
-                           BackgroundColor="White"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
-                           HeightRequest="40" />
-                </VerticalStackLayout>
-
-                <!-- Campo Email -->
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Email" TextColor="White" FontSize="14" />
-                    <Entry x:Name="EmailEntry"
-                           Placeholder="Digite o email"
-                           Keyboard="Email"
-                           BackgroundColor="White"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
-                           HeightRequest="40" />
-                </VerticalStackLayout>
-
-              
-                <Button Text="Salvar Membro"
-                        BackgroundColor="#F97316"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        CornerRadius="5"
-                        HeightRequest="45"
-                        Clicked="OnSalvarMembroClicked" />
-
-            </VerticalStackLayout>
-        </ScrollView>
+        </VerticalStackLayout>
     </Grid>
 </ContentPage>

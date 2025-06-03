@@ -46,7 +46,39 @@ namespace BibliotecaAPP.Data
             command.Parameters.AddWithValue("@CPF", membro.CPF);
             command.Parameters.AddWithValue("@Telefone", membro.Telefone);
             command.Parameters.AddWithValue("@Email", membro.Email);
-            
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        // Método Update
+        public async Task AtualizarAsync(Membro membro)
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var query = @"UPDATE Membros 
+                          SET Nome = @Nome, CPF = @CPF, Telefone = @Telefone, Email = @Email 
+                          WHERE Id = @Id";
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Nome", membro.Nome);
+            command.Parameters.AddWithValue("@CPF", membro.CPF);
+            command.Parameters.AddWithValue("@Telefone", membro.Telefone);
+            command.Parameters.AddWithValue("@Email", membro.Email);
+            command.Parameters.AddWithValue("@Id", membro.ID);
+
+            await command.ExecuteNonQueryAsync();
+        }
+
+        // Método Delete
+        public async Task ExcluirAsync(int id)
+        {
+            using var connection = new MySqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            var query = "DELETE FROM Membros WHERE Id = @Id";
+            using var command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Id", id);
+
             await command.ExecuteNonQueryAsync();
         }
     }

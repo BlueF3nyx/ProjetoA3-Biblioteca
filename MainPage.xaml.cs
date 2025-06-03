@@ -23,7 +23,12 @@ public partial class MainPage : ContentPage
 
     private async void OnRegistroEmprestimosClicked(object sender, EventArgs e)
     {
-        // Fix: Access the Services property from the App class directly  
+        // Fix: Ensure App.Services is not null before using it
+        if (App.Services == null)
+        {
+            throw new InvalidOperationException("Service provider is not initialized.");
+        }
+
         var page = ActivatorUtilities.CreateInstance<RegistroEmprestimoPage>(App.Services);
         await Navigation.PushAsync(page);
     }

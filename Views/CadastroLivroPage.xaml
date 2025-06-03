@@ -7,90 +7,150 @@
 
     <Grid>
         <!-- Imagem de fundo -->
-        <Image Source="login_biblioteca.jpg"  
-            Aspect="AspectFill"
+        <Image Source="login_biblioteca.jpg"
+               Aspect="AspectFill"
                Opacity="1.0"
                IsOpaque="True" />
 
-            <!-- Camada azul escura translúcida -->
-            <BoxView BackgroundColor="#0B1D49"
+        <BoxView BackgroundColor="#0B1D49"
                  Opacity="0.75"
                  InputTransparent="True" />
 
-            <!-- Conteúdo central com ScrollView -->
+        <VerticalStackLayout Padding="20" Spacing="10">
+
+            <Label Text="Cadastro de Livro"
+                   FontSize="24"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- Lista de livros -->
+            <ListView x:Name="LivrosListView"
+                      HeightRequest="200"
+                      BackgroundColor="Transparent"
+                      ItemSelected="OnLivroSelecionado"
+                      SelectionMode="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Border Stroke="Black" StrokeThickness="1" Background="White" Padding="5" Margin="5,2">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="3" />
+                                </Border.StrokeShape>
+
+                                <Grid ColumnDefinitions="*, Auto, Auto" VerticalOptions="Center">
+                                    <Label Text="{Binding Titulo}"
+                                           VerticalOptions="Center"
+                                           LineBreakMode="NoWrap"
+                                           TextColor="Black" />
+
+                                    <Button Text="Editar"
+                                            Grid.Column="1"
+                                            BackgroundColor="#F97316"
+                                            TextColor="White"
+                                            FontAttributes="Bold"
+                                            CornerRadius="3"
+                                            Padding="10,0"
+                                            Margin="5,0,0,0"
+                                            WidthRequest="70"
+                                            Clicked="OnEditarLivroClicked" />
+
+                                    <Button Text="Excluir"
+                                            Grid.Column="2"
+                                            BackgroundColor="Red"
+                                            TextColor="White"
+                                            FontAttributes="Bold"
+                                            CornerRadius="3"
+                                            Padding="10,0"
+                                            Margin="5,0,0,0"
+                                            WidthRequest="70"
+                                            Clicked="OnExcluirLivroClicked" />
+                                </Grid>
+                            </Border>
+
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!-- Formulário para criar/editar livro -->
             <ScrollView>
-                <VerticalStackLayout VerticalOptions="Center"
-                                 HorizontalOptions="Center"
-                                 Spacing="20"
-                                 Padding="30">
+                <VerticalStackLayout VerticalOptions="Center" 
+                                     HorizontalOptions="Center" 
+                                     Spacing="20" 
+                                     Padding="10">
 
-                    <!-- Título -->
-                    <Label Text="Cadastro de Livro"
-                       FontSize="24"
-                       TextColor="White"
-                       FontAttributes="Bold"
-                       HorizontalOptions="Center" />
-
-                    <!-- Campo Título do Livro -->
+                    <!-- Campo Título -->
                     <VerticalStackLayout Spacing="5">
-                        <Label Text="Título do Livro" TextColor="White" FontSize="14" />
+                        <Label Text="Título" TextColor="White" FontSize="14" />
                         <Entry x:Name="TituloEntry"
-                           Placeholder="Digite o título"
-                           BackgroundColor="White"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
-                           HeightRequest="40" />
+                               Placeholder="Digite o título do livro"
+                               BackgroundColor="White"
+                               TextColor="Black"
+                               PlaceholderColor="Gray"
+                               HeightRequest="60" />
                     </VerticalStackLayout>
 
                     <!-- Campo Autor -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Autor" TextColor="White" FontSize="14" />
                         <Entry x:Name="AutorEntry"
-                           Placeholder="Digite o autor"
-                           BackgroundColor="White"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
-                           HeightRequest="40" />
+                               Placeholder="Digite o autor"
+                               BackgroundColor="White"
+                               TextColor="Black"
+                               PlaceholderColor="Gray"
+                               HeightRequest="40" />
                     </VerticalStackLayout>
 
                     <!-- Campo Categoria -->
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Categoria" TextColor="White" FontSize="14" />
                         <Entry x:Name="CategoriaEntry"
-                           Placeholder="Digite a categoria"
-                           BackgroundColor="White"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
-                           HeightRequest="40" />
+                                Placeholder="Digite a categoria"
+                                BackgroundColor="White"
+                                TextColor="Black"
+                                 PlaceholderColor="Gray"
+                                 HeightRequest="40" />
                     </VerticalStackLayout>
 
                     <!-- Campo Disponibilidade -->
-                <VerticalStackLayout Spacing="5">
-                    <Picker x:Name="DisponibilidadePicker"
-                            Title="Selecione a disponibilidade"
-                            BackgroundColor="White"
-                            TextColor="Black"
-                            HeightRequest="70"
-                                >
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>Disponível</x:String>
-                                    <x:String>Emprestado</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Disponibilidade" TextColor="White" FontSize="14" />
+                        <Picker x:Name="DisponibilidadePicker"
+                                         
+                                         BackgroundColor="White"
+                                         TextColor="Black"
+                                         HeightRequest="40">
+                            <Picker.Items>
+                                <x:String>Disponível</x:String>
+                                <x:String>Emprestado</x:String>
+                            </Picker.Items>
                         </Picker>
                     </VerticalStackLayout>
 
-                    <!-- Botão Salvar -->
-                    <Button Text="Confirmar"
-                        BackgroundColor="#F97316"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        CornerRadius="5"
-                        HeightRequest="45"    
-                        Clicked="OnSalvarLivroClicked" />
+
+                    <Button x:Name="SalvarButton"
+                            Text="Salvar Livro"
+                            BackgroundColor="#F97316"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="5"
+                            HeightRequest="45"
+                            Clicked="OnSalvarLivroClicked" />
+
+                    <Button x:Name="CancelarEdicaoButton"
+                            Text="Cancelar"
+                            BackgroundColor="Gray"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="5"
+                            HeightRequest="45"
+                            Clicked="OnCancelarEdicaoClicked"
+                            IsVisible="False" />
 
                 </VerticalStackLayout>
             </ScrollView>
+
+        </VerticalStackLayout>
     </Grid>
 </ContentPage>
