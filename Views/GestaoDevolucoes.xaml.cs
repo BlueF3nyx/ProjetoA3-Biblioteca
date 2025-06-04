@@ -1,82 +1,261 @@
-﻿using System.Collections.Generic;
+﻿using BibliotecaAPP.Data;
+using BibliotecaAPP.Models;
+using System.Collections.Generic;
 using Microsoft.Maui.Controls;
 
 namespace BibliotecaAPP.Views
 {
     public partial class GestaoDevolucoes : ContentPage
     {
-        // Classe simples para representar um membro
-        public class Membro
-        {
-            public int? Id { get; set; }
-            public string? Nome { get; set; }
-            public override string? ToString() => Nome;  // Para mostrar no Picker
-        }
-
-        // Lista de membros simulada
-        private List<Membro> membros = new List<Membro>
-        {
-            new Membro { Id = 1, Nome = "João da Silva" },
-            new Membro { Id = 2, Nome = "Maria Oliveira" },
-            new Membro { Id = 3, Nome = "Carlos Souza" }
-        };
+        private readonly IMembroRepository _membroRepository;
+        private readonly IEmprestimoRepository _emprestimoRepository;
+        private List<Membro> membros;
+        private EmprestimoDetalhado? emprestimoSelecionado;
 
         public GestaoDevolucoes()
         {
             InitializeComponent();
 
-            // Popula o Picker de membros
-            membroPicker.ItemsSource = membros;
+            // Inicializar repositórios usando suas classes existentes
+            _membroRepository = new MembroRepository();
+            _emprestimoRepository = new EmprestimoRepository();
+            membros = new List<Membro>();
 
-            // Opcional: Seleciona o primeiro membro por padrão
-            if (membros.Count > 0)
-                membroPicker.SelectedIndex = 0;
+            // Inicializar a tela
+            InicializarTela();
 
-            // Opcional: Se quiser popular estadoLivroPicker via código, faça aqui
-            // estadoLivroPicker.ItemsSource = new List<string> { "Bom estado", "Danificado", "Perdido" };
+            // Carregar membros
+            _ = CarregarMembrosAsync();
         }
 
-        private void OnConfirmarDevolucaoClicked(object sender, System.EventArgs e)
+        private void InicializarTela()
         {
+            // Estado inicial da tela
+            lblTituloLivro.Text = "Selecione um membro";
+            lblNomeMembro.Text = "Aguardando seleção...";
+            entryDataDevolucao.Text = "--/--/----";
+            lblAtraso.Text = "Sem informações";
+            lblAtraso.TextColor = Colors.Gray;
+            frameAtraso.BackgroundColor = Color.FromArgb("#F0F0F0");
+
+            // Limpar campos
+            estadoLivroPicker.SelectedIndex = -1;
+            justificativaEditor.Text = "";
+            chkPago.IsChecked = false;
+            chkIsentar.IsChecked = false;
+        }
+
+        private async Task CarregarMembrosAsync()
+        {
+            try
+            {
+                // Carregar membros do banco usando seu repository
+                membros = await _membroRepository.ObterTodosAsync();
+                membroPicker.ItemsSource = membros;
+
+                // Configurar exibição do nome no picker
+                membroPicker.ItemDisplayBinding = new Binding("Nome");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Falha ao carregar membros: {ex.Message}", "OK");
+            }
+        }
+
+        private async void OnMembroSelecionadoChanged(object sender, EventArgs e)
+        {
+            var membroSelecionado = membroPicker.SelectedItem as Membro;
+            if (membroSelecionado == null)
+            {
+                InicializarTela();
+                return;
+            }
+
+            try
+            {
+                // Mostrar que está carregando
+                lblTituloLivro.Text = "Carregando...";
+                lblNomeMembro.Text = "Buscando empréstimos...";
+
+                var emprestimosAtivos = await _emprestimoRepository.ObterEmprestimosAtivosPorMembroAsync(membroSelecionado.ID);
+
+                if (emprestimosAtivos.Count == 0)
+                {
+                    // Nenhum empréstimo ativo
+                    lblTituloLivro.Text = "Nenhum empréstimo ativo";
+                    lblNomeMembro.Text = $"{membroSelecionado.Nome} (ID: {membroSelecionado.ID:D5})";
+                    entryDataDevolucao.Text = "--/--/----";
+                    lblAtraso.Text = "Sem empréstimos";
+                    lblAtraso.TextColor = Colors.Green;
+                    frameAtraso.BackgroundColor = Color.FromArgb("#E8F5E8");
+
+                    emprestimoSelecionado = null;
+                    await DisplayAlert("Informação", "Este membro não possui empréstimos ativos.", "OK");
+                    return;
+                }
+
+                // Se há apenas um empréstimo, seleciona automaticamente
+                if (emprestimosAtivos.Count == 1)
+                {
+                    emprestimoSelecionado = emprestimosAtivos[0];
+                    ExibirInformacoesEmprestimo();
+                }
+                else
+                {
+                    // Múltiplos empréstimos - mostrar lista para escolha
+                    var opcoes = emprestimosAtivos.Select(e => $"{e.TituloLivro} (Vence: {e.DataDevolucao:dd/MM/yyyy})").ToArray();
+                    var escolha = await DisplayActionSheet("Este membro tem múltiplos empréstimos. Selecione o livro:", "Cancelar", null, opcoes);
+
+                    if (escolha != "Cancelar" && escolha != null)
+                    {
+                        var emprestimoEscolhido = emprestimosAtivos[Array.IndexOf(opcoes, escolha)];
+                        emprestimoSelecionado = emprestimoEscolhido;
+                        ExibirInformacoesEmprestimo();
+                    }
+                    else
+                    {
+                        InicializarTela();
+                        membroPicker.SelectedIndex = -1;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Falha ao carregar empréstimos: {ex.Message}", "OK");
+                InicializarTela();
+            }
+        }
+
+        private void ExibirInformacoesEmprestimo()
+        {
+            if (emprestimoSelecionado == null) return;
+
+            // Atualizar informações na tela
+            lblTituloLivro.Text = emprestimoSelecionado.TituloLivro;
+            lblNomeMembro.Text = $"{emprestimoSelecionado.NomeMembro} (ID: {emprestimoSelecionado.MembroId:D5})";
+            entryDataDevolucao.Text = emprestimoSelecionado.DataDevolucao.ToString("dd/MM/yyyy");
+
+            // Configurar status de atraso
+            if (emprestimoSelecionado.DiasAtraso > 0)
+            {
+                lblAtraso.Text = $"Atraso: {emprestimoSelecionado.DiasAtraso} dias";
+                lblAtraso.TextColor = Color.FromArgb("#B85C00"); // Laranja
+                frameAtraso.BackgroundColor = Color.FromArgb("#FFF4E5"); // Fundo laranja claro
+            }
+            else
+            {
+                lblAtraso.Text = "No prazo";
+                lblAtraso.TextColor = Color.FromArgb("#28A745"); // Verde
+                frameAtraso.BackgroundColor = Color.FromArgb("#E8F5E8"); // Fundo verde claro
+            }
+
+            // Mostrar informações detalhadas
+            var detalhes = $"📚 Livro: {emprestimoSelecionado.TituloLivro}\n" +
+                          $"👤 Membro: {emprestimoSelecionado.NomeMembro}\n" +
+                          $"📅 Empréstimo: {emprestimoSelecionado.DataEmprestimo:dd/MM/yyyy}\n" +
+                          $"🗓️ Devolução: {emprestimoSelecionado.DataDevolucao:dd/MM/yyyy}\n" +
+                          $"⏰ Status: {emprestimoSelecionado.StatusAtraso}";
+
+            if (emprestimoSelecionado.DiasAtraso > 0)
+            {
+                detalhes += $"\n💰 Multa: R$ {emprestimoSelecionado.ValorMulta:F2}";
+            }
+
+            DisplayAlert("Detalhes do Empréstimo", detalhes, "OK");
+        }
+
+        private async void OnConfirmarDevolucaoClicked(object sender, System.EventArgs e)
+        {
+            if (emprestimoSelecionado == null)
+            {
+                await DisplayAlert("Erro", "Nenhum empréstimo selecionado para devolução.", "OK");
+                return;
+            }
+
             var membroSelecionado = membroPicker.SelectedItem as Membro;
             var estadoLivro = estadoLivroPicker.SelectedItem as string;
             var justificativa = justificativaEditor.Text ?? "";
-            var multaPago = chkPago.IsChecked;
-            var multaIsentar = chkIsentar.IsChecked;
 
             if (membroSelecionado == null)
             {
-                DisplayAlert("Erro", "Por favor, selecione um membro.", "OK");
+                await DisplayAlert("Erro", "Por favor, selecione um membro.", "OK");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(estadoLivro))
             {
-                DisplayAlert("Erro", "Por favor, selecione o estado do livro.", "OK");
+                await DisplayAlert("Erro", "Por favor, selecione o estado do livro.", "OK");
                 return;
             }
 
-            // Aqui você pode salvar no banco, enviar dados, etc.
-            // Por enquanto, só mostrar um resumo
+            // Verificar multa se houver atraso
+            if (emprestimoSelecionado.DiasAtraso > 0 && !chkPago.IsChecked && !chkIsentar.IsChecked)
+            {
+                await DisplayAlert("Multa Pendente",
+                    $"Este empréstimo possui uma multa de R$ {emprestimoSelecionado.ValorMulta:F2} " +
+                    $"por {emprestimoSelecionado.DiasAtraso} dias de atraso.\n\n" +
+                    "Para prosseguir, marque uma das opções: 'Pago' ou 'Isentar Multa'", "OK");
+                return;
+            }
 
-            string mensagem =
-                $"Membro: {membroSelecionado.Nome}\n" +
-                $"Estado do Livro: {estadoLivro}\n" +
-                $"Justificativa: {justificativa}\n" +
-                $"Multa Pago: {multaPago}\n" +
-                $"Isentar Multa: {multaIsentar}";
+            // Confirmação final
+            var statusMulta = "";
+            if (emprestimoSelecionado.DiasAtraso > 0)
+            {
+                statusMulta = chkPago.IsChecked ? "\n💰 Multa: PAGA" : "\n💰 Multa: ISENTA";
+            }
 
-            DisplayAlert("Devolução Confirmada", mensagem, "OK");
+            var confirmacao = $"Confirmar devolução?\n\n" +
+                             $" Livro: {emprestimoSelecionado.TituloLivro}\n" +
+                             $" Membro: {membroSelecionado.Nome}\n" +
+                             $" Estado: {estadoLivro}{statusMulta}";
+
+            if (!string.IsNullOrWhiteSpace(justificativa))
+            {
+                confirmacao += $"\n Justificativa: {justificativa}";
+            }
+
+            bool confirmar = await DisplayAlert("Confirmar Devolução", confirmacao, "Sim", "Não");
+            if (!confirmar) return;
+
+            try
+            {
+                bool sucesso = await _emprestimoRepository.RealizarDevolucaoAsync(
+                    emprestimoSelecionado.EmprestimoId,
+                    estadoLivro,
+                    justificativa);
+
+                if (sucesso)
+                {
+                    await DisplayAlert(" Sucesso", "Devolução realizada com sucesso!", "OK");
+                    LimparFormulario();
+                }
+                else
+                {
+                    await DisplayAlert(" Erro", "Falha ao realizar a devolução.", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("❌ Erro", $"Erro ao processar devolução:\n{ex.Message}", "OK");
+            }
         }
 
-        private void OnCancelarClicked(object sender, System.EventArgs e)
+        private void LimparFormulario()
         {
-            // Limpa os campos ou volta para a tela anterior
             membroPicker.SelectedIndex = -1;
             estadoLivroPicker.SelectedIndex = -1;
             justificativaEditor.Text = "";
             chkPago.IsChecked = false;
             chkIsentar.IsChecked = false;
+
+            InicializarTela();
+            emprestimoSelecionado = null;
+        }
+
+        private void OnCancelarClicked(object sender, System.EventArgs e)
+        {
+            LimparFormulario();
         }
     }
 }

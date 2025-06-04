@@ -3,55 +3,68 @@
              x:Class="BibliotecaAPP.Views.GestaoDevolucoes"
              Title="Devolução"
              BackgroundColor="White">
-
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="25">
-
             <!-- Escolha de Membro -->
             <VerticalStackLayout Spacing="8">
                 <Label Text="Selecionar Membro:" FontAttributes="Bold" TextColor="Black"/>
                 <Frame BackgroundColor="White" BorderColor="#DDD" CornerRadius="8" Padding="0" HasShadow="True">
                     <Picker x:Name="membroPicker"
-                            Title="Selecione o membro"
-                            BackgroundColor="Transparent"
-                            TextColor="Black"
-                            FontSize="20"
-                             />
+                        Title="Selecione o membro"
+                        BackgroundColor="Transparent"
+                        TextColor="Black"
+                        FontSize="20"
+                        SelectedIndexChanged="OnMembroSelecionadoChanged" />
                 </Frame>
             </VerticalStackLayout>
-
             <!-- Informações do Empréstimo -->
             <Frame BackgroundColor="White" BorderColor="#DDD" CornerRadius="12" Padding="15" HasShadow="True">
                 <VerticalStackLayout Spacing="15">
-
                     <!-- Rótulo Livro -->
                     <Label Text="Livro:" FontAttributes="Bold" TextColor="Black"/>
                     <HorizontalStackLayout Spacing="10">
                         <Image Source="book_icon.png" WidthRequest="20" HeightRequest="20"/>
-                        <Label Text="Curso Extensivo de Python" FontAttributes="Bold" VerticalOptions="Center" TextColor="Black"/>
+                        <Label x:Name="lblTituloLivro" 
+                               Text="Selecione um membro" 
+                               FontAttributes="Bold" 
+                               VerticalOptions="Center" 
+                               TextColor="Black"/>
                     </HorizontalStackLayout>
-
                     <!-- Rótulo Membro -->
                     <Label Text="Membro:" FontAttributes="Bold" TextColor="Black"/>
                     <HorizontalStackLayout Spacing="10">
                         <Image Source="user_icon.png" WidthRequest="20" HeightRequest="20"/>
-                        <Label Text="João da Silva (ID: 00123)" VerticalOptions="Center" TextColor="Black"/>
+                        <Label x:Name="lblNomeMembro" 
+                               Text="Aguardando seleção..." 
+                               VerticalOptions="Center" 
+                               TextColor="Black"/>
                     </HorizontalStackLayout>
-
                     <!-- Devolução e Atraso -->
                     <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto" ColumnSpacing="20" >
                         <VerticalStackLayout>
                             <Label Text="Devolução Esperada:" FontAttributes="Bold" TextColor="Black"/>
-                            <Entry Text="26/05/2025" IsReadOnly="True" WidthRequest="120" BackgroundColor="#F9F9F9" TextColor="Black" />
+                            <Entry x:Name="entryDataDevolucao" 
+                                   Text="--/--/----" 
+                                   IsReadOnly="True" 
+                                   WidthRequest="120" 
+                                   BackgroundColor="#F9F9F9" 
+                                   TextColor="Black" />
                         </VerticalStackLayout>
-
-                        <Frame Grid.Column="1" BackgroundColor="#FFF4E5" Padding="5,2" CornerRadius="8" HasShadow="False" VerticalOptions="End">
-                            <Label Text="Atraso: 6 dias" TextColor="#B85C00" FontSize="12"/>
+                        <Frame x:Name="frameAtraso" 
+                                Grid.Column="1" 
+                                BackgroundColor="#F0F0F0" 
+                                Padding="5,2" 
+                                CornerRadius="8" 
+                                HasShadow="False" 
+                                VerticalOptions="End">
+                            <Label x:Name="lblAtraso" 
+                                   Text="Sem informações" 
+                                   TextColor="Gray" 
+                                   FontSize="12"/>
                         </Frame>
                     </Grid>
                 </VerticalStackLayout>
             </Frame>
-
             <!-- Multa e Estado do Livro lado a lado -->
             <HorizontalStackLayout Spacing="20" VerticalOptions="Center">
                 <VerticalStackLayout Spacing="8" HorizontalOptions="StartAndExpand">
@@ -67,7 +80,6 @@
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
-
                 <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
                     <Label Text="Estado do Livro:" FontAttributes="Bold" TextColor="Black"/>
                     <Frame BackgroundColor="White" BorderColor="#DDD" CornerRadius="8" Padding="0" HasShadow="True" >
@@ -84,7 +96,6 @@
                     </Frame>
                 </VerticalStackLayout>
             </HorizontalStackLayout>
-
             <!-- Justificativa -->
             <VerticalStackLayout Spacing="8">
                 <Label Text="Justificativa:" FontAttributes="Bold" TextColor="Black"/>
@@ -95,10 +106,8 @@
                         BackgroundColor="#F9F9F9"
                         TextColor="Black"
                         Margin="0"
-                        
                         />
             </VerticalStackLayout>
-
             <!-- Botões -->
             <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
                 <Button Text="Confirmar Devolução"
@@ -107,7 +116,6 @@
                         CornerRadius="10"
                         Clicked="OnConfirmarDevolucaoClicked"
                         Grid.Column="0"/>
-
                 <Button Text="Cancelar"
                         BackgroundColor="#E5E5E5"
                         TextColor="Black"
@@ -115,7 +123,6 @@
                         Clicked="OnCancelarClicked"
                         Grid.Column="1"/>
             </Grid>
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

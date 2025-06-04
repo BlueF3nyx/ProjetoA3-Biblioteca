@@ -5,66 +5,64 @@
              NavigationPage.HasNavigationBar="False">
 
     <Grid>
-        <!-- Imagem de fundo -->
         <Image Source="login_biblioteca.jpg"
                Aspect="AspectFill"
                Opacity="1.0"
                IsOpaque="True" />
 
-        <!-- Camada azul escura translúcida -->
         <BoxView BackgroundColor="#0B1D49"
                  Opacity="0.75"
                  InputTransparent="True" />
 
-        <!-- Conteúdo central -->
-        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20" Padding="30" WidthRequest="300">
+        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20" Padding="0" WidthRequest="300">
 
-            <!-- Título -->
             <Label Text="Faça seu login."
                    FontSize="28"
                    TextColor="White"
                    FontAttributes="Bold"
                    HorizontalOptions="Center" />
 
-            <!-- Campo de e-mail -->
             <VerticalStackLayout Spacing="5" WidthRequest="300">
                 <Label Text="Email Institucional" TextColor="White" FontSize="14" LineBreakMode="NoWrap" />
                 <Entry x:Name="EmailEntry"
-               Placeholder="Digite seu e-mail"
-               BackgroundColor="White"
-               TextColor="Black"
-               PlaceholderColor="Gray"
-               HeightRequest="40"
-               WidthRequest="300"
-               MaxLength="100"
-               Text="{Binding Email}" />
+                       Placeholder="Digite seu e-mail"
+                       BackgroundColor="White"
+                       TextColor="Black"
+                       PlaceholderColor="Gray"
+                       HeightRequest="40"
+                       WidthRequest="300"
+                       MaxLength="100" />
             </VerticalStackLayout>
 
-            <!-- Campo de senha -->
             <VerticalStackLayout Spacing="5" WidthRequest="300">
                 <Label Text="Senha" TextColor="White" FontSize="14" LineBreakMode="NoWrap" />
                 <Entry x:Name="SenhaEntry"
-               Placeholder="Digite sua senha"
-               IsPassword="True"
-               BackgroundColor="White"
-               TextColor="Black"
-               PlaceholderColor="Gray"
-               HeightRequest="40"
-               WidthRequest="300"
-               MaxLength="50"
-               Text="{Binding Senha}" />
+                       Placeholder="Digite sua senha"
+                       IsPassword="True"
+                       BackgroundColor="White"
+                       TextColor="Black"
+                       PlaceholderColor="Gray"
+                       HeightRequest="40"
+                       WidthRequest="300"
+                       MaxLength="50" />
             </VerticalStackLayout>
 
-        <!-- Botão de login -->
+            <!-- Label para mostrar mensagem de erro -->
+            <Label x:Name="MensagemErroLabel"
+                   TextColor="Red"
+                   FontSize="14"
+                   HorizontalOptions="Center"
+                   IsVisible="False" />
+
             <Button Text="LOGAR"
                     BackgroundColor="#F97316"
                     TextColor="White"
                     FontAttributes="Bold"
                     CornerRadius="5"
                     HeightRequest="45"
-                     WidthRequest="300"
-                    Command="{Binding LoginCommand}"/>
-            
+                    WidthRequest="300"
+                    Clicked="OnLoginButtonClicked" />
+
         </VerticalStackLayout>
     </Grid>
 </ContentPage>
