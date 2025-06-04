@@ -5,7 +5,7 @@ using System.Data;
 
 public class FuncionarioRepository : IFuncionarioRepository
 {
-    private readonly string _connectionString = "Server=localhost;Database=BibliotecaDB;Uid=root;Pwd=Fe2ja0@!;";
+    private readonly string _connectionString = "Server=sql.freedb.tech;Port=3306;Database=freedb_BibliotecaDB;Uid=freedb_usuarioBiblioteca;Pwd=jhnD5fZhu&Bz7a&;";
 
     public async Task<Funcionario> AutenticarAsync(string email, string senha)
     {
@@ -25,8 +25,8 @@ public class FuncionarioRepository : IFuncionarioRepository
             {
                 Id = reader.GetInt32("Id"),
                 Nome = reader.GetString("Nome"),
-                email = reader.GetString("Email"),
-                senha = reader.GetString("Senha"),
+                Email = reader.GetString("Email"),
+                Senha = reader.GetString("Senha"),
                 
             };
         }

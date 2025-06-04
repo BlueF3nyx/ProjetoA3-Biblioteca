@@ -7,7 +7,7 @@ namespace BibliotecaAPP.Data
 {
     public class EmprestimoRepository : IEmprestimoRepository
     {
-        private readonly string _connectionString = "Server=localhost;Database=BibliotecaDB;Uid=root;Pwd=Fe2ja0@!;";
+        private readonly string _connectionString = "Server=sql.freedb.tech;Port=3306;Database=freedb_BibliotecaDB;Uid=freedb_usuarioBiblioteca;Pwd=jhnD5fZhu&Bz7a&;";
 
 
         public async Task AdicionarAsync(Emprestimo emprestimo)

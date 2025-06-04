@@ -150,15 +150,15 @@ namespace BibliotecaAPP.Views
             }
 
             // Mostrar informações detalhadas
-            var detalhes = $"📚 Livro: {emprestimoSelecionado.TituloLivro}\n" +
-                          $"👤 Membro: {emprestimoSelecionado.NomeMembro}\n" +
-                          $"📅 Empréstimo: {emprestimoSelecionado.DataEmprestimo:dd/MM/yyyy}\n" +
-                          $"🗓️ Devolução: {emprestimoSelecionado.DataDevolucao:dd/MM/yyyy}\n" +
-                          $"⏰ Status: {emprestimoSelecionado.StatusAtraso}";
+            var detalhes = $" Livro: {emprestimoSelecionado.TituloLivro}\n" +
+                          $" Membro: {emprestimoSelecionado.NomeMembro}\n" +
+                          $" Empréstimo: {emprestimoSelecionado.DataEmprestimo:dd/MM/yyyy}\n" +
+                          $"Devolução: {emprestimoSelecionado.DataDevolucao:dd/MM/yyyy}\n" +
+                          $" Status: {emprestimoSelecionado.StatusAtraso}";
 
             if (emprestimoSelecionado.DiasAtraso > 0)
             {
-                detalhes += $"\n💰 Multa: R$ {emprestimoSelecionado.ValorMulta:F2}";
+                detalhes += $"\n Multa: R$ {emprestimoSelecionado.ValorMulta:F2}";
             }
 
             DisplayAlert("Detalhes do Empréstimo", detalhes, "OK");
