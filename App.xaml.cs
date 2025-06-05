@@ -13,6 +13,6 @@ public partial class App : Application
 
         Services = services;
 
-        MainPage = new NavigationPage(new CadastroMembroPage());
+        MainPage = new NavigationPage(new LoginPage());
     }
 }
