@@ -13,64 +13,95 @@ public partial class CadastroLivroPage : ContentPage
     public CadastroLivroPage()
     {
         InitializeComponent();
-
         _livroRepository = new LivroRepository();
-
         livros = new ObservableCollection<Livro>();
         LivrosListView.ItemsSource = livros;
-
-        CarregarLivrosAsync();
+        _ = CarregarLivrosAsync(); 
     }
 
     private async Task CarregarLivrosAsync()
     {
-        var lista = await _livroRepository.ObterTodosAsync();
-        livros.Clear();
-
-        foreach (var livro in lista)
+        try
         {
-            livros.Add(livro);
+            var lista = await _livroRepository.ObterTodosAsync();
+            livros.Clear();
+            foreach (var livro in lista)
+            {
+                livros.Add(livro);
+            }
+
+            // ✅ NOVO: Controlar mensagem de lista vazia
+            if (EmptyStateLabel != null)
+            {
+                EmptyStateLabel.IsVisible = !livros.Any();
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Erro", $"Erro ao carregar livros: {ex.Message}", "OK");
         }
     }
 
     private async void OnSalvarLivroClicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(TituloEntry.Text) || string.IsNullOrWhiteSpace(AutorEntry.Text))
+        try
         {
-            await DisplayAlert("Erro", "Preencha os campos obrigatórios!", "OK");
-            return;
-        }
-
-        var disponibilidade = DisponibilidadePicker.SelectedItem?.ToString() ?? "Disponível";
-
-        if (livroSelecionado == null)
-        {
-            var novoLivro = new Livro
+            // Validação
+            if (string.IsNullOrWhiteSpace(TituloEntry.Text) || string.IsNullOrWhiteSpace(AutorEntry.Text))
             {
-                Titulo = TituloEntry.Text,
-                Autor = AutorEntry.Text,
-                Categoria = CategoriaEntry.Text,
-                Disponibilidade = disponibilidade
-            };
+                await DisplayAlert("Erro", "📝 Preencha os campos obrigatórios (Título e Autor)!", "OK");
+                return;
+            }
 
-            await _livroRepository.AdicionarAsync(novoLivro);
-            await DisplayAlert("Sucesso", "Livro adicionado.", "OK");
+            // Desabilitar botão durante operação
+            SalvarButton.IsEnabled = false;
+            SalvarButton.Text = livroSelecionado == null ? "Salvando..." : "Atualizando...";
+
+            var disponibilidade = DisponibilidadePicker.SelectedItem?.ToString() ?? "Disponível";
+
+            if (livroSelecionado == null)
+            {
+                //  ADICIONAR NOVO LIVRO
+                var novoLivro = new Livro
+                {
+                    Titulo = TituloEntry.Text.Trim(),
+                    Autor = AutorEntry.Text.Trim(),
+                    Categoria = CategoriaEntry.Text?.Trim() ?? "",
+                    Disponibilidade = disponibilidade
+                };
+
+                await _livroRepository.AdicionarAsync(novoLivro);
+                await DisplayAlert("Sucesso", $"✅ Livro '{novoLivro.Titulo}' adicionado com sucesso!", "OK");
+            }
+            else
+            {
+                //  ATUALIZAR LIVRO EXISTENTE
+                livroSelecionado.Titulo = TituloEntry.Text.Trim();
+                livroSelecionado.Autor = AutorEntry.Text.Trim();
+                livroSelecionado.Categoria = CategoriaEntry.Text?.Trim() ?? "";
+                livroSelecionado.Disponibilidade = disponibilidade;
+
+                await _livroRepository.AtualizarAsync(livroSelecionado);
+                await DisplayAlert("Sucesso", $"✅ Livro '{livroSelecionado.Titulo}' atualizado com sucesso!", "OK");
+            }
+
+            // Recarregar lista e limpar formulário
+            await CarregarLivrosAsync();
+            LimparFormulario();
         }
-        else
+        catch (Exception ex)
         {
-            livroSelecionado.Titulo = TituloEntry.Text;
-            livroSelecionado.Autor = AutorEntry.Text;
-            livroSelecionado.Categoria = CategoriaEntry.Text;
-            livroSelecionado.Disponibilidade = disponibilidade;
-
-            await _livroRepository.AtualizarAsync(livroSelecionado);
-            await DisplayAlert("Sucesso", "Livro atualizado.", "OK");
+            await DisplayAlert("Erro", $"❌ Erro ao salvar livro: {ex.Message}", "OK");
         }
-
-        await CarregarLivrosAsync();
-        LimparFormulario();
+        finally
+        {
+            // Restaurar botão
+            SalvarButton.IsEnabled = true;
+            SalvarButton.Text = livroSelecionado == null ? "Salvar Livro" : "Atualizar Livro";
+        }
     }
 
+    [Obsolete]
     private void OnEditarLivroClicked(object sender, EventArgs e)
     {
         var button = sender as Button;
@@ -79,39 +110,87 @@ public partial class CadastroLivroPage : ContentPage
         if (livro != null)
         {
             livroSelecionado = livro;
-
             TituloEntry.Text = livro.Titulo;
             AutorEntry.Text = livro.Autor;
             CategoriaEntry.Text = livro.Categoria;
             DisponibilidadePicker.SelectedItem = livro.Disponibilidade;
-
             SalvarButton.Text = "Atualizar Livro";
             CancelarEdicaoButton.IsVisible = true;
+
+            // ✅ SCROLL PARA O TOPO DO FORMULÁRIO
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(100);
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    TituloEntry.Focus();
+                });
+            });
         }
     }
 
-    private async void OnExcluirLivroClicked(object sender, EventArgs e)
+    private async void OnExcluirClicked(object sender, EventArgs e)
     {
-        var button = sender as Button;
-        var livro = button?.BindingContext as Livro;
-
-        if (livro != null)
+        try
         {
-            bool confirm = await DisplayAlert("Confirmação", $"Deseja excluir o livro '{livro.Titulo}'?", "Sim", "Não");
-            if (confirm)
-            {
-                await _livroRepository.ExcluirAsync(livro.ID);
-                await DisplayAlert("Sucesso", "Livro excluído.", "OK");
+            var button = (Button)sender;
+            var livro = (Livro)button.CommandParameter;
 
-                if (livro == livroSelecionado)
+            if (livro == null) return;
+
+            // Confirmar exclusão
+            bool confirmar = await DisplayAlert("⚠️ Confirmar Exclusão",
+                $"Tem certeza que deseja excluir o livro:\n\n📚 {livro.Titulo}\n✍️ {livro.Autor}\n📂 {livro.Categoria}?",
+                "Sim, Excluir", "Cancelar");
+
+            if (!confirmar) return;
+
+            // Mostrar loading
+            button.IsEnabled = false;
+            button.Text = "⏳";
+
+            // Tentar excluir
+            var (sucesso, mensagem) = await _livroRepository.ExcluirAsync(livro.ID);
+
+            if (sucesso)
+            {
+                await DisplayAlert("Sucesso", $"✅ {mensagem}", "OK");
+
+                // ✅ OPÇÃO MAIS EFICIENTE: Remover apenas da lista local
+                livros.Remove(livro);
+
+                // Se estava editando este livro, limpar formulário
+                if (livroSelecionado?.ID == livro.ID)
                 {
                     LimparFormulario();
                 }
 
-                await CarregarLivrosAsync();
+                // ✅ Atualizar estado vazio
+                if (EmptyStateLabel != null)
+                {
+                    EmptyStateLabel.IsVisible = !livros.Any();
+                }
+            }
+            else
+            {
+                await DisplayAlert("Erro", $"❌ {mensagem}", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Erro", $"❌ Erro inesperado: {ex.Message}", "OK");
+        }
+        finally
+        {
+            // Restaurar botão
+            if (sender is Button btn)
+            {
+                btn.IsEnabled = true;
+                btn.Text = "🗑️";
             }
         }
     }
+
 
     private void OnCancelarEdicaoClicked(object sender, EventArgs e)
     {
@@ -121,26 +200,36 @@ public partial class CadastroLivroPage : ContentPage
     private void LimparFormulario()
     {
         livroSelecionado = null;
-
         TituloEntry.Text = "";
         AutorEntry.Text = "";
         CategoriaEntry.Text = "";
-        DisponibilidadePicker.SelectedIndex = -1;
-
+        DisponibilidadePicker.SelectedIndex = 0; // ✅ Selecionar primeiro item ao invés de -1
         SalvarButton.Text = "Salvar Livro";
         CancelarEdicaoButton.IsVisible = false;
     }
-    private void OnLivroSelecionado(object sender, SelectedItemChangedEventArgs e)
+
+    private async void OnLivroSelecionado(object sender, SelectedItemChangedEventArgs e)
     {
-        // Handle the event when a book is selected  
         if (e.SelectedItem != null)
         {
-            // Example: Display the selected book's title  
             var selectedBook = e.SelectedItem as Livro;
-            DisplayAlert("Livro Selecionado", $"Título: {selectedBook?.Titulo}", "OK");
 
-            // Optionally, deselect the item  
+            // ✅ MOSTRAR INFORMAÇÕES DETALHADAS
+            await DisplayAlert(" Detalhes do Livro",
+                $" Título: {selectedBook?.Titulo}\n" +
+                $" Autor: {selectedBook?.Autor}\n" +
+                $" Categoria: {selectedBook?.Categoria}\n" +
+                $" Status: {selectedBook?.Disponibilidade}", "OK");
+
+            // Deselecionar item
             ((ListView)sender).SelectedItem = null;
         }
+    }
+
+    // ✅ MÉTODO PARA ATUALIZAR QUANDO A PÁGINA APARECER
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _ = CarregarLivrosAsync();
     }
 }

@@ -1,4 +1,5 @@
-﻿using BibliotecaAPP.Views;
+﻿using BibliotecaAPP.Data;
+using BibliotecaAPP.Views;
 using BibliotecaAppBase;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,7 +24,7 @@ public partial class MainPage : ContentPage
 
     private async void OnRegistroEmprestimosClicked(object sender, EventArgs e)
     {
-        // Fix: Ensure App.Services is not null before using it
+        
         if (App.Services == null)
         {
             throw new InvalidOperationException("Service provider is not initialized.");
@@ -35,7 +36,19 @@ public partial class MainPage : ContentPage
 
     private void OnGestaoDevolucoesClicked(object sender, EventArgs e)
     {
-        Navigation.PushAsync(new GestaoDevolucoes());
+        
+        if (App.Services == null)
+        {
+            throw new InvalidOperationException("Service provider is not initialized.");
+        }
+
+        // Retrieve the required dependencies from the service provider
+        var membroRepository = App.Services.GetRequiredService<IMembroRepository>();
+        var emprestimoRepository = App.Services.GetRequiredService<IEmprestimoRepository>();
+
+        // Pass the dependencies to the GestaoDevolucoes constructor
+        var page = new GestaoDevolucoes(membroRepository, emprestimoRepository);
+        Navigation.PushAsync(page);
     }
 
     private void OnHistoricoEmprestimosClicked(object sender, EventArgs e)
@@ -45,12 +58,25 @@ public partial class MainPage : ContentPage
 
     private void OnRelatoriosClicked(object sender, EventArgs e)
     {
-        Navigation.PushAsync(new RelatoriosPage());
+        if (App.Services == null)
+        {
+            throw new InvalidOperationException("Service provider is not initialized.");
+        }
+
+        var emprestimoRepository = App.Services.GetRequiredService<IEmprestimoRepository>();
+        var page = new RelatoriosPage(emprestimoRepository);
+        Navigation.PushAsync(page);
     }
 
     private void OnLogoutClicked(object sender, EventArgs e)
     {
-        // Navegar para a tela de login  
+        
+        if (Application.Current == null)
+        {
+            throw new InvalidOperationException("");
+        }
+
+        
         Application.Current.MainPage = new LoginPage();
     }
 }

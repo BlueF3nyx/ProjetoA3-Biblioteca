@@ -7,7 +7,7 @@ public class FuncionarioRepository : IFuncionarioRepository
 {
     private readonly string _connectionString = "Server=sql.freedb.tech;Port=3306;Database=freedb_BibliotecaDB;Uid=freedb_usuarioBiblioteca;Pwd=jhnD5fZhu&Bz7a&;";
 
-    public async Task<Funcionario> AutenticarAsync(string email, string senha)
+    public async Task<Funcionario?> AutenticarAsync(string email, string senha)
     {
         using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();

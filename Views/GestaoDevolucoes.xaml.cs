@@ -1,289 +1,255 @@
-﻿using BibliotecaAPP.Data;
-using BibliotecaAPP.Models;
-using BibliotecaAppBase.Models;
-using System.Collections.Generic;
-using Microsoft.Maui.Controls;
+﻿using Microsoft.Maui.Controls;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic; 
+using BibliotecaAPP.Models; // Use o namespace das suas classes Membro, Emprestimo e EmprestimoDetalhado
+// TODO: ✅ Adicione o using para seus Repositórios
+using BibliotecaAPP.Data; // Exemplo: ajuste para o seu namespace onde estão os repositórios
 
 namespace BibliotecaAPP.Views
 {
     public partial class GestaoDevolucoes : ContentPage
     {
+        private ObservableCollection<Membro> _membros;
+        // TODO: ✅ Use ObservableCollection de EmprestimoDetalhado para a lista de exibição
+        private ObservableCollection<EmprestimoDetalhado> _emprestimosDoMembro;
+        // TODO: ✅ Use EmprestimoDetalhado para o item selecionado
+        private EmprestimoDetalhado _emprestimoSelecionado; // Para manter a referência do empréstimo selecionado
+
+        // TODO: ✅ Adicione referências aos seus Repositórios (usando interfaces é uma boa prática)
         private readonly IMembroRepository _membroRepository;
         private readonly IEmprestimoRepository _emprestimoRepository;
-        private readonly ILivroRepository _livroRepository;
-        private List<Membro> membros;
-        private EmprestimoDetalhado? emprestimoSelecionado;
-        private Livro? livroSelecionado;
-       
-         public GestaoDevolucoes()
+
+        // TODO: ✅ Ajuste o construtor para receber os repositórios (idealmente via Injeção de Dependência)
+        public GestaoDevolucoes(IMembroRepository membroRepository, IEmprestimoRepository emprestimoRepository)
         {
             InitializeComponent();
 
-            membros = new List<Membro>();
-            _membroRepository = new MembroRepository(); // ou como você cria normalmente
-            _emprestimoRepository = new EmprestimoRepository();
-            _livroRepository = new LivroRepository();
+            // TODO: ✅ Atribua os repositórios injetados
+            _membroRepository = membroRepository;
+            _emprestimoRepository = emprestimoRepository;
 
-            InicializarTela();
-            _ = CarregarMembrosAsync();
+            _membros = new ObservableCollection<Membro>();
+            // TODO: ✅ Inicialize a coleção com o tipo correto
+            _emprestimosDoMembro = new ObservableCollection<EmprestimoDetalhado>();
+
+            // Vincular a lista de empréstimos ao ListView
+            emprestimosListView.ItemsSource = _emprestimosDoMembro;
+            // Vincular o Picker de membros (ItemDisplayBinding já está correto se Membro tem a propriedade Nome)
+            membroPicker.ItemDisplayBinding = new Binding("Nome");
+            membroPicker.ItemsSource = _membros; // ✅ Vincular a lista de membros ao Picker
+
+            // Ocultar as seções de detalhes e botões inicialmente
+            HideLoanDetails();
+            EmptyStateEmprestimosLabel.IsVisible = false; // Oculto inicialmente
+
+            LoadMembrosAsync(); // Carregar membros ao inicializar a página
         }
 
-        private void InicializarTela()
-        {
-            lblTituloLivro.Text = "Selecione um membro";
-            lblNomeMembro.Text = "Aguardando seleção...";
-            entryDataDevolucao.Text = "--/--/----";
-            lblAtraso.Text = "Sem informações";
-            lblAtraso.TextColor = Colors.Gray;
-            frameAtraso.BackgroundColor = Color.FromArgb("#F0F0F0");
-
-            estadoLivroPicker.SelectedIndex = -1;
-            justificativaEditor.Text = "";
-        }
-
-        private async Task CarregarMembrosAsync()
+        // Método para carregar todos os membros para o Picker
+        private async void LoadMembrosAsync()
         {
             try
             {
-                // Obter todos os membros primeiro
-                var todosMembros = await _membroRepository.ObterTodosAsync();
+                // TODO: ✅ Substitua a simulação pela sua lógica real de banco de dados usando o Repositório
+                var membrosDoBanco = await _membroRepository.ObterTodosAsync();
 
-                // Lista para armazenar membros que têm empréstimos ativos
-                var membrosComEmprestimos = new List<Membro>();
-
-                // Verificar quais membros têm empréstimos ativos
-                foreach (var membro in todosMembros)
+                _membros.Clear();
+                foreach (var membro in membrosDoBanco)
                 {
-                    var emprestimosAtivos = await _emprestimoRepository.ObterEmprestimosAtivosPorMembroAsync(membro.ID);
-                    if (emprestimosAtivos.Count > 0)
-                    {
-                        membrosComEmprestimos.Add(membro);
-                    }
+                    _membros.Add(membro);
                 }
-
-                membros = membrosComEmprestimos;
-
-                membroPicker.ItemsSource = membros;
-                membroPicker.ItemDisplayBinding = new Binding("Nome");
+                // O ItemsSource já foi definido no construtor, apenas atualizamos a coleção
+                // membroPicker.ItemsSource = _membros; // Esta linha não é mais necessária aqui
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Erro", $"Falha ao carregar membros: {ex.Message}", "OK");
+                // TODO: Tratar erros de banco de dados
+                await DisplayAlert("Erro", $"Ocorreu um erro ao carregar membros: {ex.Message}", "OK");
             }
         }
 
-        private async void OnMembroSelecionadoChanged(object sender, EventArgs e)
+        // Evento disparado quando um membro é selecionado no Picker
+        private async void OnMembroPickerSelectedIndexChanged(object sender, EventArgs e)
         {
-            var membroSelecionado = membroPicker.SelectedItem as Membro;
-            if (membroSelecionado == null)
-            {
-                InicializarTela();
-                return;
-            }
+            var picker = (Picker)sender;
+            int selectedIndex = picker.SelectedIndex;
 
+            // Limpar seleção anterior e ocultar detalhes
+            emprestimosListView.SelectedItem = null;
+            ClearLoanDetails();
+            HideLoanDetails();
+
+            if (selectedIndex != -1)
+            {
+                var selectedMembro = (Membro)picker.SelectedItem;
+                // TODO: ✅ Chame o método do seu Repositório de Empréstimos para obter os ativos do membro
+                await LoadEmprestimosDoMembroAsync(selectedMembro.ID);
+
+                // Atualiza a visibilidade do estado vazio após carregar
+                EmptyStateEmprestimosLabel.IsVisible = _emprestimosDoMembro.Count == 0;
+            }
+            else
+            {
+                _emprestimosDoMembro.Clear(); // Limpar a lista se nenhum membro for selecionado
+                EmptyStateEmprestimosLabel.IsVisible = true; // Mostrar estado vazio
+            }
+        }
+
+        // Método para carregar os empréstimos ativos de um membro
+        // TODO: ✅ Este método agora carrega EmprestimoDetalhado
+        private async Task LoadEmprestimosDoMembroAsync(int membroId)
+        {
             try
             {
-                lblTituloLivro.Text = "Carregando...";
-                lblNomeMembro.Text = "Buscando empréstimos...";
+                // TODO: ✅ Substitua a simulação pela sua lógica real de banco de dados usando o Repositório
+                // Chame o método que retorna EmprestimoDetalhado
+                var emprestimosAtivos = await _emprestimoRepository.ObterEmprestimosAtivosPorMembroAsync(membroId);
 
-                // Usar o método específico para obter empréstimos ativos do membro
-                var emprestimosAtivos = await _emprestimoRepository.ObterEmprestimosAtivosPorMembroAsync(membroSelecionado.ID);
-
-                if (emprestimosAtivos.Count == 0)
+                _emprestimosDoMembro.Clear();
+                foreach (var emprestimo in emprestimosAtivos)
                 {
-                    lblTituloLivro.Text = "Nenhum empréstimo ativo";
-                    lblNomeMembro.Text = $"{membroSelecionado.Nome}";
-                    entryDataDevolucao.Text = "--/--/----";
-                    lblAtraso.Text = "Sem empréstimos";
-                    lblAtraso.TextColor = Colors.Green;
-                    frameAtraso.BackgroundColor = Color.FromArgb("#E8F5E8");
-                    emprestimoSelecionado = null;
-                    await DisplayAlert("Informação", "Este membro não possui empréstimos ativos.", "OK");
-                    return;
-                }
-
-                // Se há apenas um empréstimo, seleciona automaticamente
-                if (emprestimosAtivos.Count == 1)
-                {
-                    emprestimoSelecionado = emprestimosAtivos[0];
-                    await ExibirInformacoesEmprestimo();
-                }
-                else
-                {
-                    // Múltiplos empréstimos - usar os dados do EmprestimoDetalhado
-                    var opcoes = new List<string>();
-
-                    foreach (var emp in emprestimosAtivos)
-                    {
-                        var titulo = emp.TituloLivro ?? "Livro não encontrado";
-                        var dataVencimento = emp.DataDevolucao.ToString("dd/MM/yyyy");
-                        opcoes.Add($"{titulo} (Vence: {dataVencimento})");
-                    }
-
-                    var escolha = await DisplayActionSheet(
-                        "Este membro tem múltiplos empréstimos. Selecione o livro:",
-                        "Cancelar",
-                        null,
-                        opcoes.ToArray());
-
-                    if (escolha != "Cancelar" && escolha != null)
-                    {
-                        var index = opcoes.IndexOf(escolha);
-                        emprestimoSelecionado = emprestimosAtivos[index];
-                        await ExibirInformacoesEmprestimo();
-                    }
-                    else
-                    {
-                        InicializarTela();
-                        membroPicker.SelectedIndex = -1;
-                    }
+                    _emprestimosDoMembro.Add(emprestimo);
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Erro", $"Falha ao carregar empréstimos: {ex.Message}", "OK");
-                InicializarTela();
+                // TODO: Tratar erros de banco de dados
+                await DisplayAlert("Erro", $"Ocorreu um erro ao carregar empréstimos: {ex.Message}", "OK");
             }
         }
 
-        private async Task ExibirInformacoesEmprestimo()
+        // Evento disparado quando um empréstimo é selecionado na ListView
+        private void OnEmprestimoSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            if (emprestimoSelecionado == null) return;
+            // TODO: ✅ Ajuste o casting para EmprestimoDetalhado
+            _emprestimoSelecionado = e.SelectedItem as EmprestimoDetalhado;
 
-            try
+            if (_emprestimoSelecionado != null)
             {
-                // Buscar informações do livro na lista de todos os livros
-                var todosLivros = await _livroRepository.ObterTodosAsync();
-                livroSelecionado = todosLivros.FirstOrDefault(l => l.ID == emprestimoSelecionado.LivroId);
+                // Exibir os detalhes do empréstimo selecionado
+                lblTituloLivro.Text = _emprestimoSelecionado.TituloLivro;
 
-                if (livroSelecionado == null)
-                {
-                    await DisplayAlert("Erro", "Erro ao carregar informações do livro.", "OK");
-                    return;
-                }
+                // TODO: ✅ O nome do membro já está disponível no EmprestimoDetalhado
+                lblNomeMembro.Text = _emprestimoSelecionado.NomeMembro ?? "Membro não encontrado"; // Exibe o nome ou um placeholder
 
-                // Atualizar informações na tela
-                lblTituloLivro.Text = emprestimoSelecionado.TituloLivro ?? livroSelecionado.Titulo;
-                lblNomeMembro.Text = emprestimoSelecionado.NomeMembro ?? "Nome não disponível";
+                lblDataDevolucaoPrevista.Text = _emprestimoSelecionado.DataDevolucaoPrevista.ToString("dd/MM/yyyy");
 
-                // Exibir data de devolução
-                entryDataDevolucao.Text = emprestimoSelecionado.DataDevolucao.ToString("dd/MM/yyyy");
+                // Atualizar o status de atraso e a cor (assumindo que EmprestimoDetalhado tem essas propriedades)
+                lblAtraso.Text = _emprestimoSelecionado.StatusExibicao; // ✅ Usar a propriedade calculada
+                frameAtraso.BackgroundColor = _emprestimoSelecionado.OverdueStatusColor; // ✅ Usar a propriedade calculada
+                lblAtraso.TextColor = Colors.White; // Texto branco para contraste com as cores de fundo
 
-                // Usar a propriedade calculada DiasAtraso
-                var diasAtraso = emprestimoSelecionado.DiasAtraso;
+                // Tornar as seções de detalhes, estado do livro e botões visíveis
+                LoanDetailsFrame.IsVisible = true;
+                BookConditionFrame.IsVisible = true;
+                ButtonsGrid.IsVisible = true;
 
-                if (diasAtraso > 0)
-                {
-                    lblAtraso.Text = $"Atraso: {diasAtraso} dias";
-                    lblAtraso.TextColor = Color.FromArgb("#B85C00");
-                    frameAtraso.BackgroundColor = Color.FromArgb("#FFF4E5");
-                }
-                else
-                {
-                    lblAtraso.Text = "No prazo";
-                    lblAtraso.TextColor = Color.FromArgb("#28A745");
-                    frameAtraso.BackgroundColor = Color.FromArgb("#E8F5E8");
-                }
-
-                // Mostrar informações detalhadas
-                var detalhes = $"Livro: {emprestimoSelecionado.TituloLivro}\n" +
-                              $"Membro: {emprestimoSelecionado.NomeMembro}\n" +
-                              $"Empréstimo: {emprestimoSelecionado.DataEmprestimo.ToString("dd/MM/yyyy")}\n" +
-                              $"Devolução: {emprestimoSelecionado.DataDevolucao.ToString("dd/MM/yyyy")}\n" +
-                              $"Status: {emprestimoSelecionado.Status}";
-
-                if (diasAtraso > 0)
-                {
-                    detalhes += $"\nAtraso: {diasAtraso} dias";
-                }
-                else
-                {
-                    detalhes += "\nSituação: No prazo";
-                }
-
-                await DisplayAlert("Detalhes do Empréstimo", detalhes, "OK");
+                // Limpar campos de estado e justificativa para a nova seleção
+                estadoLivroPicker.SelectedIndex = -1;
+                justificativaEditor.Text = string.Empty;
             }
-            catch (Exception ex)
+            else
             {
-                await DisplayAlert("Erro", $"Erro ao exibir informações: {ex.Message}", "OK");
+                // Nenhum empréstimo selecionado, ocultar detalhes
+                ClearLoanDetails();
+                HideLoanDetails();
             }
         }
 
+        // Evento disparado quando o botão "Confirmar Devolução" é clicado
         private async void OnConfirmarDevolucaoClicked(object sender, EventArgs e)
         {
-            if (emprestimoSelecionado == null || livroSelecionado == null)
+            if (_emprestimoSelecionado == null)
             {
-                await DisplayAlert("Erro", "Nenhum empréstimo selecionado para devolução.", "OK");
+                await DisplayAlert("Erro", "Nenhum empréstimo selecionado para devolver.", "OK");
                 return;
             }
 
-            var membroSelecionado = membroPicker.SelectedItem as Membro;
-            var estadoLivro = estadoLivroPicker.SelectedItem as string;
-            var justificativa = justificativaEditor.Text ?? "";
-
-            if (membroSelecionado == null)
-            {
-                await DisplayAlert("Erro", "Por favor, selecione um membro.", "OK");
-                return;
-            }
+            // Obter o estado do livro e a justificativa
+            string estadoLivro = estadoLivroPicker.SelectedItem?.ToString();
+            string justificativa = justificativaEditor.Text;
 
             if (string.IsNullOrWhiteSpace(estadoLivro))
             {
-                await DisplayAlert("Erro", "Por favor, selecione o estado do livro.", "OK");
+                await DisplayAlert("Atenção", "Por favor, selecione o estado do livro.", "OK");
                 return;
             }
 
-            // Confirmação final
-            var confirmacao = $"Confirmar devolução?\n\n" +
-                             $"Livro: {emprestimoSelecionado.TituloLivro}\n" +
-                             $"Membro: {emprestimoSelecionado.NomeMembro}\n" +
-                             $"Estado: {estadoLivro}";
+            bool confirm = await DisplayAlert("Confirmar Devolução", $"Deseja realmente marcar o livro '{_emprestimoSelecionado.TituloLivro}' como devolvido?", "Sim", "Não");
 
-            if (!string.IsNullOrWhiteSpace(justificativa))
+            if (confirm)
             {
-                confirmacao += $"\nJustificativa: {justificativa}";
-            }
-
-            bool confirmar = await DisplayAlert("Confirmar Devolução", confirmacao, "Sim", "Não");
-            if (!confirmar) return;
-
-            try
-            {
-                // Usar o método específico para realizar devolução
-                bool sucesso = await _emprestimoRepository.RealizarDevolucaoAsync(emprestimoSelecionado.EmprestimoId, estadoLivro, justificativa);
-
-                if (sucesso)
+                try
                 {
-                    await DisplayAlert("Sucesso", "Devolução realizada com sucesso!", "OK");
-                    LimparFormulario();
+                    // TODO: ✅ Chame o método do seu Repositório para realizar a devolução
+                    // O método RealizarDevolucaoAsync no seu repositório espera emprestimoId, estadoLivro, justificativa
+                    bool sucesso = await _emprestimoRepository.RealizarDevolucaoAsync(
+                        _emprestimoSelecionado.EmprestimoId, // ✅ Use a propriedade EmprestimoId do EmprestimoDetalhado
+                        estadoLivro,
+                        justificativa
+                    );
 
-                    // Recarregar membros
-                    await CarregarMembrosAsync();
+                    if (sucesso)
+                    {
+                        // Recarrega a lista para refletir a mudança (o item devolvido deve sumir da lista de pendentes)
+                        if (membroPicker.SelectedItem is Membro selectedMembro)
+                        {
+                            await LoadEmprestimosDoMembroAsync(selectedMembro.ID);
+                            EmptyStateEmprestimosLabel.IsVisible = _emprestimosDoMembro.Count == 0;
+                        }
+
+                        // Limpar e ocultar detalhes após a devolução
+                        emprestimosListView.SelectedItem = null;
+                        ClearLoanDetails();
+                        HideLoanDetails();
+
+                        await DisplayAlert("Sucesso", "Livro marcado como devolvido!", "OK");
+                    }
+                    else
+                    {
+                        await DisplayAlert("Erro", "Falha ao marcar o livro como devolvido.", "OK");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    await DisplayAlert("Erro", "Falha ao processar devolução.", "OK");
+                    // TODO: Tratar erros de banco de dados
+                    await DisplayAlert("Erro", $"Ocorreu um erro ao processar a devolução: {ex.Message}", "OK");
                 }
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Erro", $"Erro ao processar devolução:\n{ex.Message}", "OK");
             }
         }
 
-        private void LimparFormulario()
-        {
-            membroPicker.SelectedIndex = -1;
-            estadoLivroPicker.SelectedIndex = -1;
-            justificativaEditor.Text = "";
-            InicializarTela();
-            emprestimoSelecionado = null;
-            livroSelecionado = null;
-        }
-
+        // Evento disparado quando o botão "Cancelar" é clicado
         private void OnCancelarClicked(object sender, EventArgs e)
         {
-            LimparFormulario();
+            // Limpar seleção e ocultar detalhes
+            emprestimosListView.SelectedItem = null;
+            ClearLoanDetails();
+            HideLoanDetails();
+        }
+
+        // Método auxiliar para limpar os campos de detalhes
+        private void ClearLoanDetails()
+        {
+            _emprestimoSelecionado = null;
+            lblTituloLivro.Text = "-";
+            lblNomeMembro.Text = "-";
+            lblDataDevolucaoPrevista.Text = "--/--/----";
+            lblAtraso.Text = "Sem informações";
+            frameAtraso.BackgroundColor = Colors.Transparent; // Cor transparente
+            lblAtraso.TextColor = Colors.Black; // Cor neutra
+            estadoLivroPicker.SelectedIndex = -1;
+            justificativaEditor.Text = string.Empty;
+        }
+
+        // Método auxiliar para ocultar as seções de detalhes e botões
+        private void HideLoanDetails()
+        {
+            LoanDetailsFrame.IsVisible = false;
+            BookConditionFrame.IsVisible = false;
+            ButtonsGrid.IsVisible = false;
         }
     }
 }

@@ -1,171 +1,229 @@
 ﻿using BibliotecaAPP.Data;
 using BibliotecaAPP.Models;
 using BibliotecaAppBase.Models;
-using Microsoft.Maui.Controls;
-using System.Collections.ObjectModel;
 
 namespace BibliotecaAPP.Views
 {
     public partial class RegistroEmprestimoPage : ContentPage
     {
-        private readonly IMembroRepository _membroRepository;
         private readonly ILivroRepository _livroRepository;
+        private readonly IMembroRepository _membroRepository;
         private readonly IEmprestimoRepository _emprestimoRepository;
 
-        //  ObservableCollection pública para binding automático
-        public ObservableCollection<string> LivrosAdicionadosTexto { get; set; } = new();
+        private List<Livro> _livrosDisponiveis = new();
+        private List<Membro> _membrosAtivos = new();
 
-        //  Lista interna para controlar os dados
-        private List<(Livro Livro, int Duracao, DateTime DataDevolucao)> livrosAdicionados = new();
-
-        public RegistroEmprestimoPage(IMembroRepository membroRepo, ILivroRepository livroRepo, IEmprestimoRepository emprestimoRepo)
+        public RegistroEmprestimoPage()
         {
             InitializeComponent();
-            _membroRepository = membroRepo;
-            _livroRepository = livroRepo;
-            _emprestimoRepository = emprestimoRepo;
+            _livroRepository = new LivroRepository();
+            _membroRepository = new MembroRepository();
+            _emprestimoRepository = new EmprestimoRepository();
 
-            //  Binding correto
-            LivrosCollectionView.ItemsSource = LivrosAdicionadosTexto;
-
-            DatePickerEmprestimo.Date = DateTime.Today;
-            CalcularDataDevolucao();
-            DatePickerEmprestimo.DateSelected += (s, e) => CalcularDataDevolucao();
-            TextBoxDuracao.TextChanged += (s, e) => CalcularDataDevolucao();
-            LoadDataAsync();
+            ConfigurarFormulario();
         }
 
-        private async Task LoadDataAsync()
+        private void ConfigurarFormulario()
+        {
+            DatePickerEmprestimo.Date = DateTime.Now;
+            TextBoxDuracao.Text = "15";
+            CalcularDataDevolucao();
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await CarregarDados();
+        }
+
+        private async Task CarregarDados()
         {
             try
             {
-                var membros = await _membroRepository.ObterTodosAsync();
-                ComboBoxMembros.ItemsSource = membros;
-                ComboBoxMembros.ItemDisplayBinding = new Binding("Nome");
+                // Carregar todos os membros (sem filtro de Status se não existir)
+                _membrosAtivos = await _membroRepository.ObterTodosAsync();
 
-                //  Adicionar evento para atualizar label do membro
-                ComboBoxMembros.SelectedIndexChanged += (s, e) => AtualizarMembroSelecionado();
+                // Carregar livros disponíveis
+                _livrosDisponiveis = (await _livroRepository.ObterTodosAsync())
+                    .Where(l => l.Disponibilidade == "Disponível").ToList();
 
-                //  Carregar apenas livros disponíveis
-                var livros = await _livroRepository.ObterTodosAsync();
-                var livrosDisponiveis = livros.Where(l => l.Disponibilidade == "Disponível").ToList();
-                ComboBoxLivros.ItemsSource = livrosDisponiveis;
-                ComboBoxLivros.ItemDisplayBinding = new Binding("Titulo");
+                AtualizarPickers();
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Erro", "Erro ao carregar dados: " + ex.Message, "OK");
+                await DisplayAlert("Erro", $"Erro ao carregar dados: {ex.Message}", "OK");
             }
         }
 
-        //  Método para atualizar o label do membro selecionado
-        private void AtualizarMembroSelecionado()
+        private void AtualizarPickers()
         {
-            if (ComboBoxMembros.SelectedItem != null)
+            ComboBoxMembros.ItemsSource = _membrosAtivos.Select(m => $"{m.Nome} - {m.Email}").ToList();
+            ComboBoxLivros.ItemsSource = _livrosDisponiveis.Select(l => $"{l.Titulo} - {l.Autor}").ToList();
+        }
+
+        private void ComboBoxMembros_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ComboBoxMembros.SelectedIndex >= 0)
             {
-                var membro = (Membro)ComboBoxMembros.SelectedItem;
+                var membro = _membrosAtivos[ComboBoxMembros.SelectedIndex];
                 LabelMembroSelecionado.Text = membro.Nome;
+                _ = VerificarStatusMembro(membro);
             }
             else
             {
                 LabelMembroSelecionado.Text = "Nenhum membro selecionado";
             }
+            AtualizarBotaoConfirmar();
+        }
+
+        private void ComboBoxLivros_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ComboBoxLivros.SelectedIndex >= 0)
+            {
+                var livro = _livrosDisponiveis[ComboBoxLivros.SelectedIndex];
+                LabelLivroSelecionado.Text = livro.Titulo;
+            }
+            else
+            {
+                LabelLivroSelecionado.Text = "Nenhum livro selecionado";
+            }
+            AtualizarBotaoConfirmar();
+        }
+
+        
+
+        private async Task VerificarStatusMembro(Membro membro) // Updated type reference
+        {
+            try
+            {
+                var emprestimosAtivos = await _emprestimoRepository.ObterEmprestimosAtivosPorMembroAsync(membro.ID);
+
+                if (emprestimosAtivos.Any(e => e.DiasAtraso > 0))
+                {
+                    await DisplayAlert("Aviso", "Membro possui livros em atraso.", "OK");
+                    BtnConfirmar.IsEnabled = false;
+                    return;
+                }
+
+                if (emprestimosAtivos.Count >= 3)
+                {
+                    await DisplayAlert("Aviso", "Membro atingiu limite de 3 livros.", "OK");
+                    BtnConfirmar.IsEnabled = false;
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao verificar status: {ex.Message}");
+            }
+        }
+
+        private void PeriodoRapido_Click(object sender, EventArgs e)
+        {
+            if (sender is Button button && button.CommandParameter is string diasStr)
+            {
+                TextBoxDuracao.Text = diasStr;
+                CalcularDataDevolucao();
+            }
+        }
+
+        private void TextBoxDuracao_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CalcularDataDevolucao();
+        }
+
+        private void DatePickerEmprestimo_DateSelected(object sender, DateChangedEventArgs e)
+        {
+            CalcularDataDevolucao();
         }
 
         private void CalcularDataDevolucao()
         {
-            if (int.TryParse(TextBoxDuracao.Text, out int duracao))
-                DatePickerDevolucao.Date = DatePickerEmprestimo.Date.AddDays(duracao);
+            if (int.TryParse(TextBoxDuracao.Text, out int dias) && dias > 0 && dias <= 90)
+            {
+                DatePickerDevolucao.Date = DatePickerEmprestimo.Date.AddDays(dias);
+                LabelPeriodoSelecionado.Text = $"{dias} dia{(dias > 1 ? "s" : "")} - até {DatePickerDevolucao.Date:dd/MM/yyyy}";
+            }
             else
-                DatePickerDevolucao.Date = DatePickerEmprestimo.Date;
+            {
+                LabelPeriodoSelecionado.Text = "Período inválido (1-90 dias)";
+            }
+            AtualizarBotaoConfirmar();
         }
 
-        private async void AdicionarLivro_Click(object sender, EventArgs e)
+        private void AtualizarBotaoConfirmar()
         {
-            if (ComboBoxLivros.SelectedItem == null || !int.TryParse(TextBoxDuracao.Text, out int duracao))
+            bool membroSelecionado = ComboBoxMembros.SelectedIndex >= 0;
+            bool livroSelecionado = ComboBoxLivros.SelectedIndex >= 0;
+            bool periodoValido = int.TryParse(TextBoxDuracao.Text, out int dias) && dias > 0 && dias <= 90;
+
+            bool podeConfirmar = membroSelecionado && livroSelecionado && periodoValido;
+
+            BtnConfirmar.IsEnabled = podeConfirmar;
+            BtnConfirmar.BackgroundColor = podeConfirmar ?
+                Color.FromArgb("#28A745") : Color.FromArgb("#6C757D");
+        }
+
+        private async void Cancelar_Click(object sender, EventArgs e)
+        {
+            bool confirmar = await DisplayAlert("Cancelar", "Deseja cancelar e voltar?", "Sim", "Não");
+            if (confirmar)
             {
-                await DisplayAlert("Erro", "Selecione um livro e informe uma duração válida.", "OK");
-                return;
+                await Navigation.PopAsync();
             }
-
-            var livroSelecionado = (Livro)ComboBoxLivros.SelectedItem;
-
-            //  Verificar se o livro já foi adicionado
-            if (livrosAdicionados.Any(x => x.Livro.ID == livroSelecionado.ID))
-            {
-                await DisplayAlert("Erro", "Este livro já foi adicionado à lista.", "OK");
-                return;
-            }
-
-            var dataDevolucao = DatePickerEmprestimo.Date.AddDays(duracao);
-
-            //  Adicionar à lista interna
-            livrosAdicionados.Add((livroSelecionado, duracao, dataDevolucao));
-
-            // Adicionar texto formatado à ObservableCollection
-            string textoLivro = $"{livroSelecionado.Titulo} - {duracao} dias (até {dataDevolucao:dd/MM/yyyy})";
-            LivrosAdicionadosTexto.Add(textoLivro);
-
-            //  Limpar seleção
-            ComboBoxLivros.SelectedItem = null;
-            TextBoxDuracao.Text = string.Empty;
         }
 
         private async void Confirmar_Click(object sender, EventArgs e)
         {
-            if (ComboBoxMembros.SelectedItem == null)
+            if (ComboBoxLivros.SelectedIndex >= 0 && ComboBoxMembros.SelectedIndex >= 0)
             {
-                await DisplayAlert("Erro", "Selecione um membro.", "OK");
-                return;
-            }
+                var livro = _livrosDisponiveis[ComboBoxLivros.SelectedIndex];
+                var membro = _membrosAtivos[ComboBoxMembros.SelectedIndex];
 
-            if (livrosAdicionados.Count == 0)
-            {
-                await DisplayAlert("Erro", "Adicione pelo menos um livro.", "OK");
-                return;
-            }
-
-            var membroSelecionado = (Membro)ComboBoxMembros.SelectedItem;
-
-            try
-            {
-                foreach (var (livro, duracao, dataDevolucao) in livrosAdicionados)
+                var emprestimo = new Emprestimo
                 {
-                    var emprestimo = new Emprestimo
+                    IdLivro = livro.ID,
+                    IdMembro = membro.ID,
+                    DataEmprestimo = DatePickerEmprestimo.Date,
+                    DataDevolucaoReal = DatePickerDevolucao.Date
+                };
+
+                try
+                {
+                    var resultado = await _emprestimoRepository.AdicionarAsync(emprestimo);
+
+                    if (resultado > 0)
                     {
-                        IdLivro = livro.ID,
-                        IdMembro = membroSelecionado.ID,
-                        DataEmprestimo = DatePickerEmprestimo.Date,
-                        DataDevolucao = dataDevolucao,
-                        Status = "Ativo"
-                    };
+                        livro.Disponibilidade = "Emprestado";
+                        await _livroRepository.AtualizarAsync(livro);
 
-                    //  Salvar empréstimo
-                    await _emprestimoRepository.AdicionarAsync(emprestimo);
+                        await DisplayAlert("Sucesso", "Empréstimo realizado com sucesso!", "OK");
 
-                    //  CRUCIAL: Atualizar status do livro para "Emprestado"
-                    livro.Disponibilidade = "Emprestado";
-                    await _livroRepository.AtualizarAsync(livro);
+                        // Voltar para a tela anterior
+                        await Navigation.PopAsync();
+                    }
                 }
-
-                await DisplayAlert("Sucesso", $"Empréstimo registrado com sucesso!\nMembro: {membroSelecionado.Nome}\nLivros: {livrosAdicionados.Count}", "OK");
-
-                //  Limpar formulário
-                ComboBoxMembros.SelectedItem = null;
-                LabelMembroSelecionado.Text = "Nenhum membro selecionado"; //  Limpar label também
-                livrosAdicionados.Clear();
-                LivrosAdicionadosTexto.Clear();
-
-                //  Recarregar livros disponíveis
-                await LoadDataAsync();
-
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Erro", $"Erro ao confirmar empréstimo: {ex.Message}", "OK");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                await DisplayAlert("Erro", "Falha ao registrar empréstimo: " + ex.Message, "OK");
+                await DisplayAlert("Erro", "Selecione um livro e um membro antes de confirmar.", "OK");
             }
         }
 
-        // Removido o método Cancelar_Click já que não há mais botão cancelar
+
+        // Eventos para as setas dos pickers
+        private void Picker_Focused(object sender, FocusEventArgs e)
+        {
+            // Implementar se necessário
+        }
+
+        private void Picker_Unfocused(object sender, FocusEventArgs e)
+        {
+            // Implementar se necessário
+        }
     }
 }

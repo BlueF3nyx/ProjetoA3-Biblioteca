@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BibliotecaAPP.Views.GestaoDevolucoes"
@@ -5,34 +6,79 @@
              BackgroundColor="White">
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="25">
-            <!-- Escolha de Membro -->
+
+            
             <VerticalStackLayout Spacing="8">
                 <Label Text="Selecionar Membro:" FontAttributes="Bold" TextColor="Black"/>
                 <Frame BackgroundColor="White" BorderColor="#DDD" CornerRadius="8" Padding="0" HasShadow="True">
                     <Picker x:Name="membroPicker"
-                        Title="Selecione o membro"
-                        BackgroundColor="Transparent"
-                        TextColor="Black"
-                        FontSize="20"
-                        SelectedIndexChanged="OnMembroSelecionadoChanged" />
+                            Title="Selecione o membro"
+                            BackgroundColor="Transparent"
+                            TextColor="Black"
+                            FontSize="20"
+                            SelectedIndexChanged="OnMembroPickerSelectedIndexChanged" />
+                    
                 </Frame>
             </VerticalStackLayout>
 
-            <!-- Informações do Empréstimo -->
-            <Frame BackgroundColor="White" BorderColor="#DDD" CornerRadius="12" Padding="15" HasShadow="True">
+           
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Empréstimos Pendentes:" FontAttributes="Bold" TextColor="Black"/>
+                <ListView x:Name="emprestimosListView"
+                          SelectionMode="Single"
+                          ItemSelected="OnEmprestimoSelected"
+                          HeightRequest="200" 
+                    SeparatorVisibility="None">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                
+                                <Grid Padding="10" ColumnDefinitions="*,Auto">
+                                    <VerticalStackLayout Grid.Column="0">
+                                        <Label Text="{Binding TituloLivro}" FontAttributes="Bold" TextColor="Black"/>
+                                        <Label Text="{Binding DataEmprestimo, StringFormat='Emprestado em: {0:dd/MM/yyyy}'}" TextColor="Gray"/>
+                                        <Label Text="{Binding DataDevolucaoPrevista, StringFormat='Devolução Prevista: {0:dd/MM/yyyy}'}" TextColor="Gray"/>
+                                    </VerticalStackLayout>
+                                    <Frame Grid.Column="1"
+                                           BackgroundColor="{Binding OverdueStatusColor}"
+                                           Padding="5,2"
+                                           CornerRadius="5"
+                                           VerticalOptions="Center">
+                                        <Label Text="{Binding StatusExibicao}"
+                                               TextColor="White"
+                                               FontSize="12"/>
+                                    </Frame>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                
+                <Label x:Name="EmptyStateEmprestimosLabel"
+                       Text="Nenhum empréstimo pendente para este membro."
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="Gray"
+                       IsVisible="False"/>
+                
+            </VerticalStackLayout>
+
+
+            
+            <Frame x:Name="LoanDetailsFrame" BackgroundColor="White" BorderColor="#DDD" CornerRadius="12" Padding="15" HasShadow="True">
                 <VerticalStackLayout Spacing="15">
-                    <!-- Rótulo Livro -->
+                  
                     <Label Text="Livro:" FontAttributes="Bold" TextColor="Black"/>
                     <HorizontalStackLayout Spacing="10">
                         <Image Source="book_icon.png" WidthRequest="20" HeightRequest="20"/>
                         <Label x:Name="lblTituloLivro"
-                               Text="Selecione um membro"
-                               FontAttributes="Bold"
+                               Text="Selecione um empréstimo" 
+                            FontAttributes="Bold"
                                VerticalOptions="Center"
                                TextColor="Black"/>
                     </HorizontalStackLayout>
 
-                    <!-- Rótulo Membro -->
+                    
                     <Label Text="Membro:" FontAttributes="Bold" TextColor="Black"/>
                     <HorizontalStackLayout Spacing="10">
                         <Image Source="user_icon.png" WidthRequest="20" HeightRequest="20"/>
@@ -46,20 +92,22 @@
                     <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto" ColumnSpacing="20">
                         <VerticalStackLayout>
                             <Label Text="Devolução Esperada:" FontAttributes="Bold" TextColor="Black"/>
-                            <Entry x:Name="entryDataDevolucao"
-                                   Text="--/--/----"
-                                   IsReadOnly="True"
-                                   WidthRequest="120"
-                                   BackgroundColor="#F9F9F9"
-                                   TextColor="Black" />
+                            
+                            <Label  
+                                x:Name="lblDataDevolucaoPrevista"  
+                                Text="--/--/----"  
+                                FontSize="Medium"  
+                                TextColor="Black"  
+                                VerticalOptions="Center"  
+                                HorizontalOptions="Start" />
                         </VerticalStackLayout>
                         <Frame x:Name="frameAtraso"
-                                Grid.Column="1"
-                                BackgroundColor="#F0F0F0"
-                                Padding="5,2"
-                                CornerRadius="8"
-                                HasShadow="False"
-                                VerticalOptions="End">
+                               Grid.Column="1"
+                               BackgroundColor="#F0F0F0"
+                               Padding="5,2"
+                               CornerRadius="8"
+                               HasShadow="False"
+                               VerticalOptions="End">
                             <Label x:Name="lblAtraso"
                                    Text="Sem informações"
                                    TextColor="Gray"
@@ -69,36 +117,42 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Estado do Livro -->
-            <VerticalStackLayout Spacing="8">
-                <Label Text="Estado do Livro:" FontAttributes="Bold" TextColor="Black"/>
-                <Frame BackgroundColor="White" BorderColor="#DDD" CornerRadius="8" Padding="0" HasShadow="True">
-                    <Picker x:Name="estadoLivroPicker" 
-                            Title="Selecione o estado"
-                            BackgroundColor="Transparent"
-                            TextColor="Black">
-                        <Picker.Items>
-                            <x:String>Bom estado</x:String>
-                            <x:String>Danificado</x:String>
-                            <x:String>Perdido</x:String>
-                        </Picker.Items>
-                    </Picker>
-                </Frame>
-            </VerticalStackLayout>
+            
+            <Frame x:Name="BookConditionFrame" BackgroundColor="White" BorderColor="#DDD" CornerRadius="12" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="15">
+                    <!-- Estado do Livro -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Estado do Livro:" FontAttributes="Bold" TextColor="Black"/>
+                        <Frame BackgroundColor="White" BorderColor="#DDD" CornerRadius="8" Padding="0" HasShadow="True">
+                            <Picker x:Name="estadoLivroPicker"
+                                    Title="Selecione o estado"
+                                    BackgroundColor="Transparent"
+                                    TextColor="Black">
+                                <Picker.Items>
+                                    <x:String>Bom estado</x:String>
+                                    <x:String>Danificado</x:String>
+                                    <x:String>Perdido</x:String>
+                                </Picker.Items>
+                            </Picker>
+                        </Frame>
+                    </VerticalStackLayout>
 
-            <!-- Justificativa -->
-            <VerticalStackLayout Spacing="8">
-                <Label Text="Justificativa:" FontAttributes="Bold" TextColor="Black"/>
-                <Editor x:Name="justificativaEditor"
-                        Placeholder="Digite a justificativa aqui..."
-                        AutoSize="TextChanges"
-                        HeightRequest="100"
-                        BackgroundColor="#F9F9F9"
-                        TextColor="Black"/>
-            </VerticalStackLayout>
+                    <!-- Justificativa -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Justificativa:" FontAttributes="Bold" TextColor="Black"/>
+                        <Editor x:Name="justificativaEditor"
+                                Placeholder="Digite a justificativa aqui..."
+                                AutoSize="TextChanges"
+                                HeightRequest="100"
+                                BackgroundColor="#F9F9F9"
+                                TextColor="Black"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
 
-            <!-- Botões -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
+
+
+            <Grid x:Name="ButtonsGrid" ColumnDefinitions="*,*" ColumnSpacing="20">
                 <Button Text="Confirmar Devolução"
                         BackgroundColor="#007BFF"
                         TextColor="White"
@@ -112,6 +166,7 @@
                         Clicked="OnCancelarClicked"
                         Grid.Column="1"/>
             </Grid>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

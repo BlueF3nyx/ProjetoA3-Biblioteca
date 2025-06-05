@@ -1,79 +1,223 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-
-         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-         x:Class="BibliotecaAPP.Views.RegistroEmprestimoPage"
-         Title="Registro de Empréstimo"
-         BackgroundColor="Transparent"
-         NavigationPage.HasNavigationBar="False">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BibliotecaAPP.Views.RegistroEmprestimoPage"
+             Title="Registro de Empréstimo"
+             BackgroundColor="Transparent"
+             NavigationPage.HasNavigationBar="False">
     <Grid>
         <!-- Background image with dark overlay -->
         <Image Source="login_biblioteca.jpg" Aspect="AspectFill" Opacity="1.0" />
         <BoxView BackgroundColor="#0B1D49" Opacity="0.75" />
+
         <ScrollView>
             <VerticalStackLayout Padding="20" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
-                <!-- Title -->
-                <Label Text="Registro de Empréstimo"
-                   FontSize="28"
-                   FontAttributes="Bold"
-                   TextColor="White"
-                   HorizontalOptions="Center"
-                   Margin="0,10,0,20" />
+
+                <!-- Header com ícone -->
+                <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Label Text=" 📚 Registro de Empréstimo"
+                           FontSize="28"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
+                    
+                </VerticalStackLayout>
+
                 <!-- Member Selection -->
-                <Border BackgroundColor="#1E2A5E" StrokeThickness="0" Padding="20">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Selecionar Membro" 
-                           TextColor="#F97316" 
-                           FontSize="16" 
-                           FontAttributes="Bold" />
-                        <Picker x:Name="ComboBoxMembros"
-                            Title="Escolha um membro..."
-                            BackgroundColor="White"
-                            TextColor="#333"
-                            FontSize="16"
-                            HeightRequest="50" />
-                    </VerticalStackLayout>
-                </Border>
-                <!-- Book and Duration -->
-                <Border BackgroundColor="#1E2A5E" StrokeThickness="0" Padding="20">
-                    <VerticalStackLayout Spacing="15">
-                        <Label Text="Adicionar Livro" 
-                           TextColor="#F97316" 
-                           FontSize="16" 
-                           FontAttributes="Bold" />
-                        <Picker x:Name="ComboBoxLivros"
-                            Title="Escolha um livro..."
-                            BackgroundColor="White"
-                            TextColor="#333"
-                            FontSize="16"
-                            HeightRequest="50" />
-                        <HorizontalStackLayout Spacing="10">
-                            <Label Text="Duração:" 
-                               TextColor="White" 
-                               FontSize="14"
-                               VerticalOptions="Center" />
-                            <Entry x:Name="TextBoxDuracao"
-                               Placeholder="7"
-                               Keyboard="Numeric"
-                               BackgroundColor="White"
-                               TextColor="#333"
-                               FontSize="16"
-                               HeightRequest="45"
-                               WidthRequest="60"
-                               HorizontalTextAlignment="Center" />
-                            <Label Text="dias" 
-                               TextColor="White" 
-                               FontSize="14"
-                               VerticalOptions="Center" />
+                <Border BackgroundColor="#1E2A5E" 
+                        StrokeThickness="2" 
+                        Stroke="#F97316"
+                        StrokeShape="RoundRectangle 10"
+                        Padding="20">
+                    <VerticalStackLayout Spacing="12">
+                        <!-- Título com seta -->
+                        <HorizontalStackLayout Spacing="8" HorizontalOptions="CenterAndExpand">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="👤" FontSize="20" TextColor="#F97316" />
+                                <Label Text="Selecionar Membro"
+                                       TextColor="#F97316"
+                                       FontSize="16"
+                                       
+                                       FontAttributes="Bold" />
+                            </HorizontalStackLayout>
+                            <!-- Seta indicativa -->
+                            <Label x:Name="SetaMembro" 
+                                   Text="▼" 
+                                   FontSize="16" 
+                                   TextColor="#F97316"
+                                   VerticalOptions="Center"
+                                   Rotation="0">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" 
+                                                Binding="{Binding Source={x:Reference ComboBoxMembros}, Path=IsFocused}" 
+                                                Value="True">
+                                        <Setter Property="Rotation" Value="180" />
+                                        <Setter Property="TextColor" Value="White" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                         </HorizontalStackLayout>
+
+                        <Picker x:Name="ComboBoxMembros"
+                                Title="Escolha um membro..."
+                                BackgroundColor="White"
+                                TextColor="#333"
+                                FontSize="16"
+                                HeightRequest="80"
+                                SelectedIndexChanged="ComboBoxMembros_SelectedIndexChanged"
+                                Focused="Picker_Focused"
+                                Unfocused="Picker_Unfocused" />
                     </VerticalStackLayout>
                 </Border>
-                <!-- Dates -->
-                <Border BackgroundColor="#1E2A5E" StrokeThickness="0" Padding="20">
+
+                <!-- Book Selection -->
+                <Border BackgroundColor="#1E2A5E" 
+                        StrokeThickness="2" 
+                        Stroke="#F97316"
+                        StrokeShape="RoundRectangle 10"
+                        Padding="20">
+                    <VerticalStackLayout Spacing="12">
+                        <!-- Título com seta -->
+                        <HorizontalStackLayout Spacing="8" HorizontalOptions="CenterAndExpand">
+                            <HorizontalStackLayout Spacing="8">
+                                <Label Text="📖" FontSize="20" TextColor="#F97316" />
+                                <Label Text="Selecionar Livro"
+                                       TextColor="#F97316"
+                                       FontSize="16"
+                                       FontAttributes="Bold" />
+                            </HorizontalStackLayout>
+                            <!-- Seta indicativa -->
+                            <Label x:Name="SetaLivro" 
+                                   Text="▼" 
+                                   FontSize="16" 
+                                   TextColor="#F97316"
+                                   VerticalOptions="Center"
+                                   Rotation="0">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" 
+                                                Binding="{Binding Source={x:Reference ComboBoxLivros}, Path=IsFocused}" 
+                                                Value="True">
+                                        <Setter Property="Rotation" Value="180" />
+                                        <Setter Property="TextColor" Value="White" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                        </HorizontalStackLayout>
+
+                        <Picker x:Name="ComboBoxLivros"
+                                Title="Escolha um livro..."
+                                BackgroundColor="White"
+                                TextColor="#333"
+                                FontSize="16"
+                                HeightRequest="80"
+                                SelectedIndexChanged="ComboBoxLivros_SelectedIndexChanged"
+                                Focused="Picker_Focused"
+                                Unfocused="Picker_Unfocused" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Duration Section -->
+                <Border BackgroundColor="#1E2A5E" 
+                        StrokeThickness="2" 
+                        Stroke="#F97316"
+                        StrokeShape="RoundRectangle 10"
+                        Padding="20">
                     <VerticalStackLayout Spacing="15">
-                        <Label Text="Datas do Empréstimo" 
-                           TextColor="#F97316" 
-                           FontSize="16" 
-                           FontAttributes="Bold" />
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="⏰" FontSize="20" TextColor="#F97316" />
+                            <Label Text="Período do Empréstimo"
+                                   TextColor="#F97316"
+                                   FontSize="16"
+                                   FontAttributes="Bold" />
+                        </HorizontalStackLayout>
+
+                        <!-- Botões de período rápido -->
+                        <Label Text="Períodos sugeridos:"
+                               TextColor="White"
+                               FontSize="14"
+                               Margin="0,5,0,0" />
+
+                        <FlexLayout Direction="Row" 
+                                    Wrap="Wrap" 
+                                    JustifyContent="Center" 
+                                    AlignItems="Center"
+                                    >
+                            <Button Text="7 dias"
+                                    BackgroundColor="#4A90E2"
+                                    TextColor="White"
+                                    FontSize="12"
+                                    WidthRequest="70"
+                                    HeightRequest="35"
+                                    CornerRadius="5"
+                                    Clicked="PeriodoRapido_Click"
+                                    CommandParameter="7" />
+
+                            <Button Text="15 dias"
+                                    BackgroundColor="#50C878"
+                                    TextColor="White"
+                                    FontSize="12"
+                                    WidthRequest="70"
+                                    HeightRequest="35"
+                                    CornerRadius="5"
+                                    Clicked="PeriodoRapido_Click"
+                                    CommandParameter="15" />
+
+                            <Button Text="30 dias"
+                                    BackgroundColor="#FF8C00"
+                                    TextColor="White"
+                                    FontSize="12"
+                                    WidthRequest="70"
+                                    HeightRequest="35"
+                                    CornerRadius="5"
+                                    Clicked="PeriodoRapido_Click"
+                                    CommandParameter="30" />
+                        </FlexLayout>
+
+                        <!-- Duração personalizada - CENTRALIZADA -->
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Label Text="Ou defina um período personalizado:"
+                                   TextColor="White"
+                                   FontSize="14"
+                                   HorizontalOptions="Center" />
+
+                            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                                <Label Text="Duração:"
+                                       TextColor="White"
+                                       FontSize="14"
+                                       VerticalOptions="Center" />
+                                <Entry x:Name="TextBoxDuracao"
+                                       Placeholder="15"
+                                       Keyboard="Numeric"
+                                       BackgroundColor="White"
+                                       TextColor="#333"
+                                       FontSize="16"
+                                       HeightRequest="45"
+                                       WidthRequest="70"
+                                       HorizontalTextAlignment="Center"
+                                       TextChanged="TextBoxDuracao_TextChanged" />
+                                <Label Text="dias"
+                                       TextColor="White"
+                                       FontSize="14"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Dates -->
+                <Border BackgroundColor="#1E2A5E" 
+                        StrokeThickness="2" 
+                        Stroke="#F97316"
+                        StrokeShape="RoundRectangle 10"
+                        Padding="20">
+                    <VerticalStackLayout Spacing="15">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="📅" FontSize="20" TextColor="#F97316" />
+                            <Label Text="Datas do Empréstimo"
+                                   TextColor="#F97316"
+                                   FontSize="16"
+                                   FontAttributes="Bold" />
+                        </HorizontalStackLayout>
+
                         <Grid ColumnSpacing="15" RowSpacing="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="1*" />
@@ -83,118 +227,123 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Label Text="Empréstimo:" 
-                               TextColor="White" 
-                               FontSize="14" 
-                               FontAttributes="Bold" 
-                               Grid.Column="0" Grid.Row="0" />
+
+                            <Label Text="Data Empréstimo:"
+                                   TextColor="White"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   Grid.Column="0" Grid.Row="0" />
                             <DatePicker x:Name="DatePickerEmprestimo"
-                                    Grid.Column="0" Grid.Row="1"
-                                    BackgroundColor="White"
-                                    TextColor="#333"
-                                    FontSize="14"
-                                    HeightRequest="45"
-                                    Format="dd/MM/yyyy" />
-                            <Label Text="Devolução:" 
-                               TextColor="White" 
-                               FontSize="14" 
-                               FontAttributes="Bold" 
-                               Grid.Column="1" Grid.Row="0" />
+                                        Grid.Column="0" Grid.Row="1"
+                                        BackgroundColor="White"
+                                        TextColor="#333"
+                                        FontSize="14"
+                                        HeightRequest="45"
+                                        Format="dd/MM/yyyy"
+                                        DateSelected="DatePickerEmprestimo_DateSelected" />
+
+                            <Label Text="Data Devolução:"
+                                   TextColor="White"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   Grid.Column="1" Grid.Row="0" />
                             <DatePicker x:Name="DatePickerDevolucao"
-                                    Grid.Column="1" Grid.Row="1"
-                                    BackgroundColor="#E5E5E5"
-                                    TextColor="#666"
-                                    FontSize="14"
-                                    HeightRequest="45"
-                                    Format="dd/MM/yyyy"
-                                    IsEnabled="False" />
+                                        Grid.Column="1" Grid.Row="1"
+                                        BackgroundColor="#E5E5E5"
+                                        TextColor="#666"
+                                        FontSize="14"
+                                        HeightRequest="45"
+                                        Format="dd/MM/yyyy"
+                                        IsEnabled="False" />
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
-                <!-- Add Book Button -->
-                <Button Text="Adicionar Livro à Lista"
-                    Clicked="AdicionarLivro_Click"
-                    BackgroundColor="#F97316"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    FontSize="16"
-                    CornerRadius="8"
-                    HeightRequest="55" />
-                <!-- Member and Books Summary -->
-                <Border BackgroundColor="#1E2A5E" StrokeThickness="0" Padding="20">
+
+                <!-- Resumo do Empréstimo -->
+                <Border BackgroundColor="#1E2A5E" 
+                        StrokeThickness="2" 
+                        Stroke="#F97316"
+                        StrokeShape="RoundRectangle 10"
+                        Padding="20">
                     <VerticalStackLayout Spacing="15">
-                        <Label Text="Resumo do Empréstimo"
-                           TextColor="#F97316"
-                           FontAttributes="Bold"
-                           FontSize="16" />
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="📋" FontSize="20" TextColor="#F97316" />
+                            <Label Text="Resumo do Empréstimo"
+                                   TextColor="#F97316"
+                                   FontAttributes="Bold"
+                                   FontSize="16" />
+                        </HorizontalStackLayout>
+
                         <!-- Member Info -->
                         <HorizontalStackLayout Spacing="10">
-                            <Label Text="Membro:" 
-                               TextColor="White" 
-                               FontSize="14" 
-                               FontAttributes="Bold"
-                               VerticalOptions="Center" />
+                            <Label Text="Membro:"
+                                   TextColor="White"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center" />
                             <Label x:Name="LabelMembroSelecionado"
-                               Text="Nenhum membro selecionado"
-                               TextColor="#FFF"
-                               FontSize="14"
-                               VerticalOptions="Center" />
+                                   Text="Nenhum membro selecionado"
+                                   TextColor="#B8C5D6"
+                                   FontSize="14"
+                                   VerticalOptions="Center" />
                         </HorizontalStackLayout>
-                        <!-- Books List -->
-                        <Frame BackgroundColor="White"
-                           CornerRadius="8"
-                           Padding="10"
-                           HasShadow="False"
-                           HeightRequest="150">
-                            <CollectionView x:Name="LivrosCollectionView" 
-                                       EmptyView="Nenhum livro adicionado">
-                                <CollectionView.EmptyViewTemplate>
-                                    <DataTemplate>
-                                        <Label Text="Nenhum livro adicionado"
-                                           TextColor="#999"
-                                           FontSize="14"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
-                                    </DataTemplate>
-                                </CollectionView.EmptyViewTemplate>
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Padding="8" ColumnSpacing="10">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <Label Text="{Binding .}" 
-                                               FontSize="14" 
-                                               TextColor="#333"
-                                               VerticalOptions="Center"
-                                               LineBreakMode="TailTruncation" />
-                                            <Label Text="✓" 
-                                               Grid.Column="1"
-                                               TextColor="#28A745" 
-                                               FontSize="16"
-                                               FontAttributes="Bold"
-                                               VerticalOptions="Center" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
-                        </Frame>
+
+                        <!-- Book Info -->
+                        <HorizontalStackLayout Spacing="10">
+                            <Label Text="Livro:"
+                                   TextColor="White"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center" />
+                            <Label x:Name="LabelLivroSelecionado"
+                                   Text="Nenhum livro selecionado"
+                                   TextColor="#B8C5D6"
+                                   FontSize="14"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                        <!-- Period Info -->
+                        <HorizontalStackLayout Spacing="10">
+                            <Label Text="Período:"
+                                   TextColor="White"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center" />
+                            <Label x:Name="LabelPeriodoSelecionado"
+                                   Text="Não definido"
+                                   TextColor="#B8C5D6"
+                                   FontSize="14"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
                     </VerticalStackLayout>
                 </Border>
-                <!-- Single Confirm Button -->
-                <Button Text="Confirmar"
-                    Clicked="Confirmar_Click"
-                    BackgroundColor="#28A745"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    FontSize="18"
-                    CornerRadius="8"
-                    HeightRequest="60"
-                    WidthRequest="200"
-                    HorizontalOptions="Center"
-                    Margin="0,20,0,30" />
+
+                
+                <HorizontalStackLayout Spacing="15" HorizontalOptions="Center" Margin="0,20,0,30">
+                    <!-- Botão Cancelar -->
+                    <Button x:Name="BtnConfirmar"
+                            Text="✅ Confirmar"
+                            Clicked="Confirmar_Click"
+                            BackgroundColor="#28A745"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            CornerRadius="8"
+                            HeightRequest="55"
+                            WidthRequest="140"
+                            IsEnabled="False" />
+                    <Button Text="❌ Cancelar"
+                            Clicked="Cancelar_Click"
+                            BackgroundColor="#DC3545"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            CornerRadius="8"
+                            HeightRequest="55"
+                            WidthRequest="140" />
+                </HorizontalStackLayout>
+
             </VerticalStackLayout>
         </ScrollView>
     </Grid>
-    </ContentPage>
+</ContentPage>

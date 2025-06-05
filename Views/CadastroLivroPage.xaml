@@ -4,167 +4,227 @@
              Title="Cadastro de Livros"
              BackgroundColor="Transparent"
              NavigationPage.HasNavigationBar="False">
-
     <Grid>
         <!-- Imagem de fundo -->
         <Image Source="login_biblioteca.jpg"
                Aspect="AspectFill"
                Opacity="1.0"
                IsOpaque="True" />
-
         <BoxView BackgroundColor="#0B1D49"
                  Opacity="0.75"
                  InputTransparent="True" />
+        <ScrollView>
+            <VerticalStackLayout Padding="15" Spacing="12">
+                <!-- Título da página compacto -->
+                <Label Text="📚 Cadastro de Livros"
+                       FontSize="22"
+                       TextColor="White"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       Margin="0,5,0,10" />
+                <!-- Formulário compacto -->
+                <Border BackgroundColor="#1E2A5E"
+                        StrokeThickness="0"
+                        Padding="15"
+                        Margin="0,0,0,12">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="8">
+                        <!-- Header do formulário compacto -->
+                        
 
-        <VerticalStackLayout Padding="20" Spacing="10">
-
-            <Label Text="Cadastro de Livro"
-                   FontSize="24"
-                   TextColor="White"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" />
-
-            <!-- Lista de livros -->
-            <ListView x:Name="LivrosListView"
-                      HeightRequest="200"
-                      BackgroundColor="Transparent"
-                      ItemSelected="OnLivroSelecionado"
-                      SelectionMode="None">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Border Stroke="Black" StrokeThickness="1" Background="White" Padding="5" Margin="5,2">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="3" />
-                                </Border.StrokeShape>
-
-                                <Grid ColumnDefinitions="*, Auto, Auto" VerticalOptions="Center">
-                                    <Label Text="{Binding Titulo}"
-                                           VerticalOptions="Center"
-                                           LineBreakMode="NoWrap"
-                                           TextColor="Black" />
-
-                                    <Button Text="Editar"
-                                            Grid.Column="1"
-                                            BackgroundColor="#F97316"
-                                            TextColor="White"
-                                            FontAttributes="Bold"
-                                            CornerRadius="3"
-                                            Padding="10,0"
-                                            Margin="5,0,0,0"
-                                            WidthRequest="70"
-                                            Clicked="OnEditarLivroClicked" />
-
-                                    <Button Text="Excluir"
-                                            Grid.Column="2"
-                                            BackgroundColor="Red"
-                                            TextColor="White"
-                                            FontAttributes="Bold"
-                                            CornerRadius="3"
-                                            Padding="10,0"
-                                            Margin="5,0,0,0"
-                                            WidthRequest="70"
-                                            Clicked="OnExcluirLivroClicked" />
-                                </Grid>
-                            </Border>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
-            <!-- Formulário para criar/editar livro -->
-            <ScrollView>
-                <VerticalStackLayout VerticalOptions="Center" 
-                                     HorizontalOptions="Center" 
-                                     Spacing="20" 
-                                     Padding="10"
-                                     WidthRequest="350">
-                    <!-- largura fixa para todo formulário -->
-
-                    <!-- Campo Título -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Título" TextColor="White" FontSize="14" />
-                        <Entry x:Name="TituloEntry"
-                           Placeholder="Digite o título do livro"
-                           BackgroundColor="White"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
-                           HeightRequest="40"
-                           WidthRequest="350"
-                           HorizontalOptions="Start"
-                           MaxLength="255" />
+                        <!-- Grid para campos lado a lado -->
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,*" ColumnSpacing="10" RowSpacing="8">
+                            <!-- Título (linha completa) -->
+                            <Label Text="📖 Título" TextColor="White" FontSize="13" FontAttributes="Bold"
+                                   Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
+                            <Entry x:Name="TituloEntry"
+                                   Placeholder="Digite o título"
+                                   BackgroundColor="White"
+                                   TextColor="Black"
+                                   PlaceholderColor="Gray"
+                                   HeightRequest="38"
+                                   MaxLength="255"
+                                   FontSize="13"
+                                   Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />
+                            <!-- Autor e Categoria lado a lado -->
+                            <Label Text="✍️ Autor" TextColor="White" FontSize="13" FontAttributes="Bold"
+                                   Grid.Row="2" Grid.Column="0" />
+                            <Label Text="📂 Categoria" TextColor="White" FontSize="13" FontAttributes="Bold"
+                                   Grid.Row="2" Grid.Column="1" />
+                            <Entry x:Name="AutorEntry"
+                                   Placeholder="Nome do autor"
+                                   BackgroundColor="White"
+                                   TextColor="Black"
+                                   PlaceholderColor="Gray"
+                                   HeightRequest="38"
+                                   MaxLength="255"
+                                   FontSize="13"
+                                   Grid.Row="3" Grid.Column="0" />
+                            <Entry x:Name="CategoriaEntry"
+                                   Placeholder="Ex: Ficção"
+                                   BackgroundColor="White"
+                                   TextColor="Black"
+                                   PlaceholderColor="Gray"
+                                   HeightRequest="38"
+                                   MaxLength="100"
+                                   FontSize="13"
+                                   Grid.Row="3" Grid.Column="1" />
+                        </Grid>
+                        <!-- Disponibilidade -->
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="📊 Status" TextColor="White" FontSize="13" FontAttributes="Bold" />
+                            <Picker x:Name="DisponibilidadePicker"
+                                    BackgroundColor="White"
+                                    TextColor="Black"
+                                    HeightRequest="38"
+                                    FontSize="13"
+                                    SelectedIndex="0">
+                                <Picker.Items>
+                                    <x:String>Disponível</x:String>
+                                    <x:String>Emprestado</x:String>
+                                    <x:String>Atrasado</x:String>
+                                </Picker.Items>
+                            </Picker>
+                        </VerticalStackLayout>
+                        <!-- Botões compactos -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,12,0,0">
+                            <Button x:Name="SalvarButton"
+                                    Text="💾 Salvar"
+                                    BackgroundColor="#F97316"
+                                    TextColor="White"
+                                    FontAttributes="Bold"
+                                    CornerRadius="6"
+                                    HeightRequest="42"
+                                    FontSize="14"
+                                    Grid.Column="0"
+                                    Clicked="OnSalvarLivroClicked" />
+                            <Button x:Name="CancelarEdicaoButton"
+                                    Text="❌ Cancelar"
+                                    BackgroundColor="#6B7280"
+                                    TextColor="White"
+                                    FontAttributes="Bold"
+                                    CornerRadius="6"
+                                    HeightRequest="42"
+                                    FontSize="14"
+                                    Grid.Column="1"
+                                    Clicked="OnCancelarEdicaoClicked"
+                                    IsVisible="False" />
+                        </Grid>
                     </VerticalStackLayout>
+                </Border>
+                <!-- Lista de livros compacta -->
+                <Border BackgroundColor="#1E2A5E"
+                        StrokeThickness="0"
+                        Padding="15">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="📋 Livros"
+                               FontSize="16"
+                               TextColor="#F97316"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center" />
+                        <ListView x:Name="LivrosListView"
+                                  HeightRequest="250"
+                                  BackgroundColor="Transparent"
+                                  ItemSelected="OnLivroSelecionado"
+                                  SelectionMode="None"
+                                  SeparatorVisibility="None">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <Border Stroke="#E5E7EB"
+                                                StrokeThickness="1"
+                                                Background="White"
+                                                Padding="10"
+                                                Margin="0,3">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="6" />
+                                            </Border.StrokeShape>
+                                            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto,Auto">
+                                                <!-- Info do livro compacta -->
+                                                <VerticalStackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Spacing="2" Margin="0,0,0,8">
+                                                    <Label Text="{Binding Titulo}"
+                                                           FontSize="14"
+                                                           FontAttributes="Bold"
+                                                           TextColor="#1F2937"
+                                                           LineBreakMode="TailTruncation" />
 
-                    <!-- Campo Autor -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Autor" TextColor="White" FontSize="14" />
-                        <Entry x:Name="AutorEntry"
-                           Placeholder="Digite o autor"
-                           BackgroundColor="White"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
-                           HeightRequest="40"
-                           WidthRequest="350"
-                           HorizontalOptions="Start"
-                           MaxLength="255" />
+                                                    <Grid ColumnDefinitions="*,Auto">
+                                                        <Label Text="{Binding Autor, StringFormat='por {0}'}"
+                                                               FontSize="12"
+                                                               TextColor="#6B7280"
+                                                               LineBreakMode="TailTruncation"
+                                                               Grid.Column="0" />
+                                                        <Label Text="{Binding Disponibilidade}"
+                                                               FontSize="11"
+                                                               FontAttributes="Bold"
+                                                               Grid.Column="1">
+                                                            <Label.Triggers>
+                                                                <DataTrigger TargetType="Label" Binding="{Binding Disponibilidade}" Value="Disponível">
+                                                                    <Setter Property="TextColor" Value="#059669" />
+                                                                </DataTrigger>
+                                                                <DataTrigger TargetType="Label" Binding="{Binding Disponibilidade}" Value="Emprestado">
+                                                                    <Setter Property="TextColor" Value="#F59E0B" />
+                                                                </DataTrigger>
+                                                                <DataTrigger TargetType="Label" Binding="{Binding Disponibilidade}" Value="Atrasado">
+                                                                    <Setter Property="TextColor" Value="#DC2626" />
+                                                                </DataTrigger>
+                                                            </Label.Triggers>
+                                                        </Label>
+                                                    </Grid>
+
+                                                    <Label Text="{Binding Categoria, StringFormat='📂 {0}'}"
+                                                           FontSize="11"
+                                                           TextColor="#9CA3AF" />
+                                                </VerticalStackLayout>
+                                                <!-- Botões compactos -->
+                                                <Button Text="Editar" 
+                                                        Grid.Row="1"
+                                                        Grid.Column="1"
+BackgroundColor="#F97316"
+TextColor="White"
+FontAttributes="Bold"
+CornerRadius="4"
+WidthRequest="60"    
+HeightRequest="32"
+FontSize="14"
+Margin="2,0"
+Clicked="OnEditarLivroClicked" />
+                                                <Button Text="Excluir" 
+        Grid.Row="1"
+ Grid.Column="2"
+ BackgroundColor="#DC2626"
+ TextColor="White"
+ FontAttributes="Bold"
+ CornerRadius="4"
+ WidthRequest="60"                                                        
+ HeightRequest="32"
+ FontSize="14"
+ Margin="2,0"
+ CommandParameter="{Binding .}"
+ Clicked="OnExcluirClicked" />
+                                            </Grid>
+                                        </Border>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <!-- Estado vazio compacto -->
+                        <Label x:Name="EmptyStateLabel"
+                               Text="📚 Nenhum livro cadastrado\nAdicione o primeiro!"
+                               TextColor="#9CA3AF"
+                               FontSize="13"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               IsVisible="False"
+                               Margin="15" />
                     </VerticalStackLayout>
-
-                    <!-- Campo Categoria -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Categoria" TextColor="White" FontSize="14" />
-                        <Entry x:Name="CategoriaEntry"
-                           Placeholder="Digite a categoria"
-                           BackgroundColor="White"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
-                           HeightRequest="40"
-                           WidthRequest="350"
-                           HorizontalOptions="Start"
-                           MaxLength="100" />
-                    </VerticalStackLayout>
-
-                    <!-- Campo Disponibilidade -->
-                    <VerticalStackLayout Spacing="5">
-                        <Label Text="Disponibilidade" TextColor="White" FontSize="14" />
-                        <Picker x:Name="DisponibilidadePicker"
-                            BackgroundColor="White"
-                            TextColor="Black"
-                            HeightRequest="40"
-                            WidthRequest="350"
-                            HorizontalOptions="Start">
-                            <Picker.Items>
-                                <x:String>Disponível</x:String>
-                                <x:String>Emprestado</x:String>
-                            </Picker.Items>
-                        </Picker>
-                    </VerticalStackLayout>
-
-                    <Button x:Name="SalvarButton"
-                        Text="Salvar Livro"
-                        BackgroundColor="#F97316"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        CornerRadius="5"
-                        HeightRequest="45"
-                        WidthRequest="350"
-                        HorizontalOptions="Start"
-                        Clicked="OnSalvarLivroClicked" />
-
-                    <Button x:Name="CancelarEdicaoButton"
-                        Text="Cancelar"
-                        BackgroundColor="Gray"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        CornerRadius="5"
-                        HeightRequest="45"
-                        WidthRequest="350"
-                        HorizontalOptions="Start"
-                        Clicked="OnCancelarEdicaoClicked"
-                        IsVisible="False" />
-
-                </VerticalStackLayout>
-            </ScrollView>
-
-        </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
     </Grid>
 </ContentPage>

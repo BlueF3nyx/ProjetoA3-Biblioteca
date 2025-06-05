@@ -1,6 +1,8 @@
 ﻿using BibliotecaAPP.Models;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BibliotecaAPP.Data
 {
@@ -11,26 +13,23 @@ namespace BibliotecaAPP.Data
         public async Task<List<Membro>> ObterTodosAsync()
         {
             var membros = new List<Membro>();
-
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
-
             var query = "SELECT * FROM Membros";
             using var command = new MySqlCommand(query, connection);
             using var reader = await command.ExecuteReaderAsync();
-
             while (await reader.ReadAsync())
             {
                 membros.Add(new Membro
                 {
                     ID = reader.GetInt32("Id"),
-                    Nome = reader.GetString("Nome"),
-                    CPF = reader.GetString("CPF"),
-                    Telefone = reader.GetString("Telefone"),
-                    Email = reader.GetString("Email")
+                    // ✅ Adicionada verificação IsDBNull para colunas string
+                    Nome = reader.IsDBNull("Nome") ? "" : reader.GetString("Nome"),
+                    CPF = reader.IsDBNull("CPF") ? "" : reader.GetString("CPF"),
+                    Telefone = reader.IsDBNull("Telefone") ? "" : reader.GetString("Telefone"),
+                    Email = reader.IsDBNull("Email") ? "" : reader.GetString("Email")
                 });
             }
-
             return membros;
         }
 
@@ -38,15 +37,13 @@ namespace BibliotecaAPP.Data
         {
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
-
-            var query = @"INSERT INTO Membros (Nome, CPF, Telefone, Email) 
+            var query = @"INSERT INTO Membros (Nome, CPF, Telefone, Email)
                           VALUES (@Nome, @CPF, @Telefone, @Email)";
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@Nome", membro.Nome);
             command.Parameters.AddWithValue("@CPF", membro.CPF);
             command.Parameters.AddWithValue("@Telefone", membro.Telefone);
             command.Parameters.AddWithValue("@Email", membro.Email);
-
             await command.ExecuteNonQueryAsync();
         }
 
@@ -55,9 +52,8 @@ namespace BibliotecaAPP.Data
         {
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
-
-            var query = @"UPDATE Membros 
-                          SET Nome = @Nome, CPF = @CPF, Telefone = @Telefone, Email = @Email 
+            var query = @"UPDATE Membros
+                          SET Nome = @Nome, CPF = @CPF, Telefone = @Telefone, Email = @Email
                           WHERE Id = @Id";
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@Nome", membro.Nome);
@@ -65,7 +61,6 @@ namespace BibliotecaAPP.Data
             command.Parameters.AddWithValue("@Telefone", membro.Telefone);
             command.Parameters.AddWithValue("@Email", membro.Email);
             command.Parameters.AddWithValue("@Id", membro.ID);
-
             await command.ExecuteNonQueryAsync();
         }
 
@@ -74,11 +69,9 @@ namespace BibliotecaAPP.Data
         {
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
-
             var query = "DELETE FROM Membros WHERE Id = @Id";
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@Id", id);
-
             await command.ExecuteNonQueryAsync();
         }
     }

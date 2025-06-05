@@ -1,14 +1,14 @@
 ﻿using BibliotecaAPP.Data;
-using BibliotecaAPP.Views;
+using BibliotecaAPP.Views; // Certifique-se de que este using está presente
 using BibliotecaAppBase;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Hosting; // Adicionar este using para AddTransient
 
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
-
         builder
             .UseMauiApp<App>()
             .ConfigureFonts(fonts =>
@@ -21,16 +21,20 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-        // Registrar serviços e páginas
+        // Registrar serviços (repositórios)
         builder.Services.AddSingleton<IMembroRepository, MembroRepository>();
         builder.Services.AddSingleton<ILivroRepository, LivroRepository>();
         builder.Services.AddSingleton<IEmprestimoRepository, EmprestimoRepository>();
 
         builder.Services.AddTransient<RegistroEmprestimoPage>();
+        builder.Services.AddTransient<RelatoriosPage>();
+        
+        builder.Services.AddTransient<GestaoDevolucoes>();
 
         var app = builder.Build();
 
-        App.Services = app.Services;  // Aqui você seta o IServiceProvider estático no App
+        
+        App.Services = app.Services;
 
         return app;
     }
