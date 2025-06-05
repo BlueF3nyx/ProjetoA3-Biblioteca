@@ -12,10 +12,10 @@ namespace BibliotecaAPP.Views
         private readonly ILivroRepository _livroRepository;
         private readonly IEmprestimoRepository _emprestimoRepository;
 
-        
+        //  ObservableCollection pública para binding automático
         public ObservableCollection<string> LivrosAdicionadosTexto { get; set; } = new();
 
-        //Lista interna para controlar os dados
+        //  Lista interna para controlar os dados
         private List<(Livro Livro, int Duracao, DateTime DataDevolucao)> livrosAdicionados = new();
 
         public RegistroEmprestimoPage(IMembroRepository membroRepo, ILivroRepository livroRepo, IEmprestimoRepository emprestimoRepo)
@@ -25,7 +25,7 @@ namespace BibliotecaAPP.Views
             _livroRepository = livroRepo;
             _emprestimoRepository = emprestimoRepo;
 
-            
+            //  Binding correto
             LivrosCollectionView.ItemsSource = LivrosAdicionadosTexto;
 
             DatePickerEmprestimo.Date = DateTime.Today;
@@ -152,7 +152,7 @@ namespace BibliotecaAPP.Views
 
                 //  Limpar formulário
                 ComboBoxMembros.SelectedItem = null;
-                LabelMembroSelecionado.Text = "Nenhum membro selecionado"; // ✅ Limpar label também
+                LabelMembroSelecionado.Text = "Nenhum membro selecionado"; //  Limpar label também
                 livrosAdicionados.Clear();
                 LivrosAdicionadosTexto.Clear();
 
