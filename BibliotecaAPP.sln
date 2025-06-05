@@ -1,9 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36127.28 d17.14
+VisualStudioVersion = 17.14.36127.28
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotecaAPP", "BibliotecaAPP.csproj", "{129C2273-9192-0729-8317-178FD2796832}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9C3E7550-704D-483E-9D44-C0695BED6CF1} = {9C3E7550-704D-483E-9D44-C0695BED6CF1}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BilbiotecaAPP.Tests", "..\BilbiotecaAPP.Tests\BilbiotecaAPP.Tests.csproj", "{3F327A4A-3C8A-4424-BBE3-8F57431ADCCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotecaAPP.Core", "..\BibliotecaAPP.Core\BibliotecaAPP.Core.csproj", "{9C3E7550-704D-483E-9D44-C0695BED6CF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +24,14 @@ Global
 		{129C2273-9192-0729-8317-178FD2796832}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{129C2273-9192-0729-8317-178FD2796832}.Release|Any CPU.Build.0 = Release|Any CPU
 		{129C2273-9192-0729-8317-178FD2796832}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{3F327A4A-3C8A-4424-BBE3-8F57431ADCCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F327A4A-3C8A-4424-BBE3-8F57431ADCCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F327A4A-3C8A-4424-BBE3-8F57431ADCCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F327A4A-3C8A-4424-BBE3-8F57431ADCCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C3E7550-704D-483E-9D44-C0695BED6CF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C3E7550-704D-483E-9D44-C0695BED6CF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C3E7550-704D-483E-9D44-C0695BED6CF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C3E7550-704D-483E-9D44-C0695BED6CF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

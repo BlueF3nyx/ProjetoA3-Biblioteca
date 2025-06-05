@@ -1,8 +1,7 @@
-﻿using BibliotecaAPP.Data;
-using BibliotecaAPP.Views; // Certifique-se de que este using está presente
+﻿using BibliotecaAPP.Core.Data;
+using BibliotecaAPP.Views;
 using BibliotecaAppBase;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Hosting; // Adicionar este using para AddTransient
 
 public static class MauiProgram
 {

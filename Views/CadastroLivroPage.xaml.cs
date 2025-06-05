@@ -1,5 +1,5 @@
-﻿using BibliotecaAPP.Data;
-using BibliotecaAppBase.Models;
+﻿using BibliotecaAPP.Core.Data;
+using BibliotecaAPP.Core.Models;
 using System.Collections.ObjectModel;
 
 namespace BibliotecaAPP.Views;

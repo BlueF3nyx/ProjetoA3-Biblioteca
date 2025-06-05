@@ -1,45 +1,40 @@
-﻿using Microsoft.Maui.Controls;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic; 
-using BibliotecaAPP.Models; // Use o namespace das suas classes Membro, Emprestimo e EmprestimoDetalhado
-// TODO: ✅ Adicione o using para seus Repositórios
-using BibliotecaAPP.Data; // Exemplo: ajuste para o seu namespace onde estão os repositórios
+﻿using System.Collections.ObjectModel;
+using BibliotecaAPP.Core.Models; 
+
+using BibliotecaAPP.Core.Data; 
 
 namespace BibliotecaAPP.Views
 {
     public partial class GestaoDevolucoes : ContentPage
     {
         private ObservableCollection<Membro> _membros;
-        // TODO: ✅ Use ObservableCollection de EmprestimoDetalhado para a lista de exibição
+        
         private ObservableCollection<EmprestimoDetalhado> _emprestimosDoMembro;
-        // TODO: ✅ Use EmprestimoDetalhado para o item selecionado
+        
         private EmprestimoDetalhado _emprestimoSelecionado; // Para manter a referência do empréstimo selecionado
 
-        // TODO: ✅ Adicione referências aos seus Repositórios (usando interfaces é uma boa prática)
+        
         private readonly IMembroRepository _membroRepository;
         private readonly IEmprestimoRepository _emprestimoRepository;
 
-        // TODO: ✅ Ajuste o construtor para receber os repositórios (idealmente via Injeção de Dependência)
+        
         public GestaoDevolucoes(IMembroRepository membroRepository, IEmprestimoRepository emprestimoRepository)
         {
             InitializeComponent();
 
-            // TODO: ✅ Atribua os repositórios injetados
+            
             _membroRepository = membroRepository;
             _emprestimoRepository = emprestimoRepository;
 
             _membros = new ObservableCollection<Membro>();
-            // TODO: ✅ Inicialize a coleção com o tipo correto
+            
             _emprestimosDoMembro = new ObservableCollection<EmprestimoDetalhado>();
 
-            // Vincular a lista de empréstimos ao ListView
+            
             emprestimosListView.ItemsSource = _emprestimosDoMembro;
-            // Vincular o Picker de membros (ItemDisplayBinding já está correto se Membro tem a propriedade Nome)
+           
             membroPicker.ItemDisplayBinding = new Binding("Nome");
-            membroPicker.ItemsSource = _membros; // ✅ Vincular a lista de membros ao Picker
+            membroPicker.ItemsSource = _membros; 
 
             // Ocultar as seções de detalhes e botões inicialmente
             HideLoanDetails();
@@ -138,16 +133,16 @@ namespace BibliotecaAPP.Views
                 lblDataDevolucaoPrevista.Text = _emprestimoSelecionado.DataDevolucaoPrevista.ToString("dd/MM/yyyy");
 
                 // Atualizar o status de atraso e a cor (assumindo que EmprestimoDetalhado tem essas propriedades)
-                lblAtraso.Text = _emprestimoSelecionado.StatusExibicao; // ✅ Usar a propriedade calculada
-                frameAtraso.BackgroundColor = _emprestimoSelecionado.OverdueStatusColor; // ✅ Usar a propriedade calculada
-                lblAtraso.TextColor = Colors.White; // Texto branco para contraste com as cores de fundo
+                lblAtraso.Text = _emprestimoSelecionado.StatusExibicao; 
+ 
+                lblAtraso.TextColor = Colors.White; 
 
-                // Tornar as seções de detalhes, estado do livro e botões visíveis
+                
                 LoanDetailsFrame.IsVisible = true;
                 BookConditionFrame.IsVisible = true;
                 ButtonsGrid.IsVisible = true;
 
-                // Limpar campos de estado e justificativa para a nova seleção
+               
                 estadoLivroPicker.SelectedIndex = -1;
                 justificativaEditor.Text = string.Empty;
             }

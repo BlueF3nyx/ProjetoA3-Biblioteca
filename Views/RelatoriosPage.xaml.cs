@@ -1,8 +1,8 @@
 ﻿// No arquivo RelatoriosPage.xaml.cs
 using System;
 using Microsoft.Maui.Controls;
-using BibliotecaAPP.Data; // Importe o namespace do seu repositório
-using BibliotecaAPP.Models; // Importe o namespace dos seus modelos
+using BibliotecaAPP.Core.Data; // Importe o namespace do seu repositório
+using BibliotecaAPP.Core.Models; // Importe o namespace dos seus modelos
 using System.Collections.Generic; // Para List
 using System.Text; // Para StringBuilder
 

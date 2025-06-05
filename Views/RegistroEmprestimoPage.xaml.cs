@@ -1,6 +1,5 @@
-﻿using BibliotecaAPP.Data;
-using BibliotecaAPP.Models;
-using BibliotecaAppBase.Models;
+﻿using BibliotecaAPP.Core.Data;
+using BibliotecaAPP.Core.Models;
 
 namespace BibliotecaAPP.Views
 {

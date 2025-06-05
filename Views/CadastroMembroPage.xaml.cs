@@ -1,6 +1,6 @@
 ﻿
-using BibliotecaAPP.Data;
-using BibliotecaAPP.Models;
+using BibliotecaAPP.Core.Data;
+using BibliotecaAPP.Core.Models;
 using System.Net.Mail;
 namespace BibliotecaAPP.Views
 {

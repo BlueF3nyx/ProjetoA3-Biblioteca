@@ -1,4 +1,3 @@
-using BibliotecaAPP;
 using BibliotecaAPP.Views;
 
 namespace BibliotecaAppBase;
@@ -13,6 +12,6 @@ public partial class App : Application
 
         Services = services;
 
-        MainPage = new NavigationPage(new MainPage());
+        MainPage = new NavigationPage(new LoginPage());
     }
 }

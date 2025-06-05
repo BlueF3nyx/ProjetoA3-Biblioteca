@@ -1,4 +1,4 @@
-﻿using BibliotecaAPP.Data;
+﻿using BibliotecaAPP.Core.Data;
 using BibliotecaAPP.Views;
 using BibliotecaAppBase;
 using Microsoft.Extensions.DependencyInjection;

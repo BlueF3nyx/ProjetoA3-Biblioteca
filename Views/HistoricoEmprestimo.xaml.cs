@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
-using BibliotecaAPP.Models;
-using BibliotecaAPP.Data;
+using BibliotecaAPP.Core.Models;
+using BibliotecaAPP.Core.Data;
 using System.Runtime.CompilerServices;
 
 namespace BibliotecaAPP.Views
@@ -188,101 +183,5 @@ namespace BibliotecaAPP.Views
         }
 
         
-        private async Task CriarDadosDeTesteParaCores()
-        {
-            try
-            {
-                
-                var emprestimosExistentes = await _emprestimoRepository.ObterTodosAsync();
-                if (emprestimosExistentes.Any())
-                {
-                    await DisplayAlert("ℹ️ Info", "Dados de teste já existem! Limpe o banco para recriar.", "OK");
-                    return;
-                }
-
-               
-                var livroRepo = new LivroRepository(); 
-                var membroRepo = new MembroRepository(); 
-                var livros = await livroRepo.ObterTodosAsync(); 
-                var membros = await membroRepo.ObterTodosAsync(); 
-
-                if (!livros.Any())
-                {
-                    await DisplayAlert("❌ Erro", "Cadastre pelo menos 1 livro primeiro!", "OK");
-                    return;
-                }
-                if (!membros.Any())
-                {
-                    await DisplayAlert("❌ Erro", "Cadastre pelo menos 1 membro primeiro!", "OK");
-                    return;
-                }
-
-                
-                var livroId = livros.First().ID; 
-                var membroId = membros.First().ID; 
-
-              
-                var demos = new[]
-                {
-                    
-                    new Emprestimo 
-                    {
-                        IdLivro = livroId,
-                        IdMembro = membroId,
-                        DataEmprestimo = DateTime.Now.AddDays(-30), // Emprestado há 30 dias
-                        DataDevolucaoPrevista = DateTime.Now.AddDays(-5), // Previsão era há 5 dias
-                        DataDevolucaoReal = null, // Ainda não devolvido
-                        Status = "Ativo" // Status no banco (pode ser 'Ativo' ou 'Atrasado' dependendo da sua lógica de persistência)
-                    },
-                    // 🧡 PENDENTE (DataDevolucaoPrevista hoje ou amanhã, DataDevolucaoReal é NULL)
-                    new Emprestimo
-                    {
-                        IdLivro = livroId,
-                        IdMembro = membroId,
-                        DataEmprestimo = DateTime.Now.AddDays(-7), // Emprestado há 7 dias
-                        DataDevolucaoPrevista = DateTime.Now.Date.AddDays(1), // Previsão para amanhã (use .Date para comparar apenas a data)
-                        DataDevolucaoReal = null, // Ainda não devolvido
-                        Status = "Ativo" // Status no banco
-                    },
-                     // 📖 EMPRESTADO (DataDevolucaoPrevista no futuro, DataDevolucaoReal é NULL)
-                    new Emprestimo
-                    {
-                        IdLivro = livroId,
-                        IdMembro = membroId,
-                        DataEmprestimo = DateTime.Now.AddDays(-3), // Emprestado há 3 dias
-                        DataDevolucaoPrevista = DateTime.Now.AddDays(15), // Previsão para daqui 15 dias
-                        DataDevolucaoReal = null, // Ainda não devolvido
-                        Status = "Ativo" // Status no banco
-                    },
-                    // ✅ DEVOLVIDO (DataDevolucaoReal tem valor)
-                    new Emprestimo
-                    {
-                        IdLivro = livroId,
-                        IdMembro = membroId,
-                        DataEmprestimo = DateTime.Now.AddDays(-10), // Emprestado há 10 dias
-                        DataDevolucaoPrevista = DateTime.Now.AddDays(-3), // Previsão era há 3 dias (pode ser antes ou depois da real)
-                        DataDevolucaoReal = DateTime.Now.AddDays(-1), // Devolvido há 1 dia
-                        Status = "Devolvido" // Status no banco
-                    }
-                };
-                foreach (var demo in demos)
-                {
-                    // ✅ Adiciona os empréstimos de teste usando o repositório
-                    await _emprestimoRepository.AdicionarAsync(demo); // Assumindo que AdicionarAsync recebe Emprestimo
-                }
-                await DisplayAlert("✅ Sucesso", "Dados de teste criados com sucesso!", "OK");
-                await CarregarHistoricoAsync(); // Recarrega a lista para mostrar os novos dados
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("❌ Erro", $"Erro ao criar dados de teste: {ex.Message}", "OK");
-            }
-        }
-
-        // ✅ Evento Click do botão de teste (adicione este botão no seu XAML)
-        private async void OnCriarDemoClicked(object sender, EventArgs e)
-        {
-            await CriarDadosDeTesteParaCores();
-        }
     }
 }
