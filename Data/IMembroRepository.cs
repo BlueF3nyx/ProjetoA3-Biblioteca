@@ -10,6 +10,7 @@ namespace BibliotecaAPP.Data
         Task AdicionarAsync(Membro membro);
 
         Task AtualizarAsync(Membro membro);  
-        Task ExcluirAsync(int id);            
+        Task ExcluirAsync(int id);
+        
     }
 }

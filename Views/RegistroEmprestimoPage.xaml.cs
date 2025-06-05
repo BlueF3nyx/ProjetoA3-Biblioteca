@@ -12,28 +12,29 @@ namespace BibliotecaAPP.Views
         private readonly ILivroRepository _livroRepository;
         private readonly IEmprestimoRepository _emprestimoRepository;
 
-        // Usamos essa lista para exibir os livros adicionados com duração
-        private ObservableCollection<(Livro Livro, int Duracao)> livrosAdicionados = new();
+        
+        public ObservableCollection<string> LivrosAdicionadosTexto { get; set; } = new();
+
+        //Lista interna para controlar os dados
+        private List<(Livro Livro, int Duracao, DateTime DataDevolucao)> livrosAdicionados = new();
 
         public RegistroEmprestimoPage(IMembroRepository membroRepo, ILivroRepository livroRepo, IEmprestimoRepository emprestimoRepo)
         {
             InitializeComponent();
-
             _membroRepository = membroRepo;
             _livroRepository = livroRepo;
             _emprestimoRepository = emprestimoRepo;
 
-            LivrosCollectionView.ItemsSource = livrosAdicionados;
+            
+            LivrosCollectionView.ItemsSource = LivrosAdicionadosTexto;
 
             DatePickerEmprestimo.Date = DateTime.Today;
             CalcularDataDevolucao();
-
             DatePickerEmprestimo.DateSelected += (s, e) => CalcularDataDevolucao();
             TextBoxDuracao.TextChanged += (s, e) => CalcularDataDevolucao();
-
             LoadDataAsync();
         }
-       
+
         private async Task LoadDataAsync()
         {
             try
@@ -42,13 +43,32 @@ namespace BibliotecaAPP.Views
                 ComboBoxMembros.ItemsSource = membros;
                 ComboBoxMembros.ItemDisplayBinding = new Binding("Nome");
 
+                //  Adicionar evento para atualizar label do membro
+                ComboBoxMembros.SelectedIndexChanged += (s, e) => AtualizarMembroSelecionado();
+
+                //  Carregar apenas livros disponíveis
                 var livros = await _livroRepository.ObterTodosAsync();
-                ComboBoxLivros.ItemsSource = livros;
+                var livrosDisponiveis = livros.Where(l => l.Disponibilidade == "Disponível").ToList();
+                ComboBoxLivros.ItemsSource = livrosDisponiveis;
                 ComboBoxLivros.ItemDisplayBinding = new Binding("Titulo");
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Erro", "Erro ao carregar dados: " + ex.Message, "OK");
+            }
+        }
+
+        //  Método para atualizar o label do membro selecionado
+        private void AtualizarMembroSelecionado()
+        {
+            if (ComboBoxMembros.SelectedItem != null)
+            {
+                var membro = (Membro)ComboBoxMembros.SelectedItem;
+                LabelMembroSelecionado.Text = membro.Nome;
+            }
+            else
+            {
+                LabelMembroSelecionado.Text = "Nenhum membro selecionado";
             }
         }
 
@@ -60,22 +80,33 @@ namespace BibliotecaAPP.Views
                 DatePickerDevolucao.Date = DatePickerEmprestimo.Date;
         }
 
-        private void AdicionarLivro_Click(object sender, EventArgs e)
+        private async void AdicionarLivro_Click(object sender, EventArgs e)
         {
             if (ComboBoxLivros.SelectedItem == null || !int.TryParse(TextBoxDuracao.Text, out int duracao))
             {
-                DisplayAlert("Erro", "Selecione um livro e informe uma duração válida.", "OK");
+                await DisplayAlert("Erro", "Selecione um livro e informe uma duração válida.", "OK");
                 return;
             }
 
             var livroSelecionado = (Livro)ComboBoxLivros.SelectedItem;
 
-            livrosAdicionados.Add((livroSelecionado, duracao));
+            //  Verificar se o livro já foi adicionado
+            if (livrosAdicionados.Any(x => x.Livro.ID == livroSelecionado.ID))
+            {
+                await DisplayAlert("Erro", "Este livro já foi adicionado à lista.", "OK");
+                return;
+            }
 
-            // Atualiza a CollectionView manualmente (se necessário)
-            LivrosCollectionView.ItemsSource = null;
-            LivrosCollectionView.ItemsSource = livrosAdicionados;
+            var dataDevolucao = DatePickerEmprestimo.Date.AddDays(duracao);
 
+            //  Adicionar à lista interna
+            livrosAdicionados.Add((livroSelecionado, duracao, dataDevolucao));
+
+            // Adicionar texto formatado à ObservableCollection
+            string textoLivro = $"{livroSelecionado.Titulo} - {duracao} dias (até {dataDevolucao:dd/MM/yyyy})";
+            LivrosAdicionadosTexto.Add(textoLivro);
+
+            //  Limpar seleção
             ComboBoxLivros.SelectedItem = null;
             TextBoxDuracao.Text = string.Empty;
         }
@@ -98,28 +129,36 @@ namespace BibliotecaAPP.Views
 
             try
             {
-                foreach (var (livro, duracao) in livrosAdicionados)
+                foreach (var (livro, duracao, dataDevolucao) in livrosAdicionados)
                 {
                     var emprestimo = new Emprestimo
                     {
                         IdLivro = livro.ID,
                         IdMembro = membroSelecionado.ID,
                         DataEmprestimo = DatePickerEmprestimo.Date,
-                        DataDevolucao = DatePickerEmprestimo.Date.AddDays(duracao),
+                        DataDevolucao = dataDevolucao,
                         Status = "Ativo"
                     };
 
+                    //  Salvar empréstimo
                     await _emprestimoRepository.AdicionarAsync(emprestimo);
+
+                    //  CRUCIAL: Atualizar status do livro para "Emprestado"
+                    livro.Disponibilidade = "Emprestado";
+                    await _livroRepository.AtualizarAsync(livro);
                 }
 
-                await DisplayAlert("Sucesso", $"Empréstimo registrado para {membroSelecionado.Nome} com {livrosAdicionados.Count} livro(s).", "OK");
+                await DisplayAlert("Sucesso", $"Empréstimo registrado com sucesso!\nMembro: {membroSelecionado.Nome}\nLivros: {livrosAdicionados.Count}", "OK");
 
+                //  Limpar formulário
                 ComboBoxMembros.SelectedItem = null;
+                LabelMembroSelecionado.Text = "Nenhum membro selecionado"; // ✅ Limpar label também
                 livrosAdicionados.Clear();
+                LivrosAdicionadosTexto.Clear();
 
-                // Atualizar lista da CollectionView
-                LivrosCollectionView.ItemsSource = null;
-                LivrosCollectionView.ItemsSource = livrosAdicionados;
+                //  Recarregar livros disponíveis
+                await LoadDataAsync();
+
             }
             catch (Exception ex)
             {
@@ -127,9 +166,6 @@ namespace BibliotecaAPP.Views
             }
         }
 
-        private async void Cancelar_Click(object sender, EventArgs e)
-        {
-            await Navigation.PopAsync();
-        }
+        // Removido o método Cancelar_Click já que não há mais botão cancelar
     }
 }

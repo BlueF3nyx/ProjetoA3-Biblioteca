@@ -38,34 +38,40 @@
                                     <RoundRectangle CornerRadius="3" />
                                 </Border.StrokeShape>
 
-                                <Grid ColumnDefinitions="*, Auto, Auto" VerticalOptions="Center">
+                                <Grid ColumnDefinitions="*, 80, 70, 70" VerticalOptions="Center">
                                     <Label Text="{Binding Nome}"
-                                    VerticalOptions="Center"
-                                    LineBreakMode="NoWrap"
-                                    TextColor="Black" />
+                                            VerticalOptions="Center"
+                                            LineBreakMode="NoWrap"
+                                            TextColor="Black" />
+
+                                    <Button Text="Devolver"
+                                            Grid.Column="1"
+                                            BackgroundColor="#28a745"
+                                            TextColor="White"
+                                            FontAttributes="Bold"
+                                            FontSize="11"
+                                            CornerRadius="3"
+                                            Clicked="OnDevolverLivrosClicked" />
 
                                     <Button Text="Editar"
-                                    Grid.Column="1"
-                                    BackgroundColor="#F97316"
-                                    TextColor="White"
-                                    FontAttributes="Bold"
-                                    CornerRadius="3"
-                                    Padding="10,0"
-                                    Margin="5,0,0,0"
-                                    WidthRequest="70"
-                                    Clicked="OnEditarMembroClicked" />
+                                            Grid.Column="2"
+                                            BackgroundColor="#F97316"
+                                            TextColor="White"
+                                            FontAttributes="Bold"
+                                            FontSize="11"
+                                            CornerRadius="3"
+                                        Clicked="OnEditarMembroClicked" />
 
                                     <Button Text="Excluir"
-                                    Grid.Column="2"
-                                    BackgroundColor="Red"
-                                    TextColor="White"
-                                    FontAttributes="Bold"
-                                    CornerRadius="3"
-                                    Padding="10,0"
-                                    Margin="5,0,0,0"
-                                    WidthRequest="70"
-                                    Clicked="OnExcluirMembroClicked" />
+                                            Grid.Column="3"
+                                            BackgroundColor="Red"
+                                            TextColor="White"
+                                            FontAttributes="Bold"
+                                            FontSize="11"
+                                            CornerRadius="3"
+                                            Clicked="OnExcluirMembroClicked" />
                                 </Grid>
+
                             </Border>
 
                         </ViewCell>

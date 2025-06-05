@@ -17,6 +17,7 @@
                         SelectedIndexChanged="OnMembroSelecionadoChanged" />
                 </Frame>
             </VerticalStackLayout>
+
             <!-- Informações do Empréstimo -->
             <Frame BackgroundColor="White" BorderColor="#DDD" CornerRadius="12" Padding="15" HasShadow="True">
                 <VerticalStackLayout Spacing="15">
@@ -24,78 +25,67 @@
                     <Label Text="Livro:" FontAttributes="Bold" TextColor="Black"/>
                     <HorizontalStackLayout Spacing="10">
                         <Image Source="book_icon.png" WidthRequest="20" HeightRequest="20"/>
-                        <Label x:Name="lblTituloLivro" 
-                               Text="Selecione um membro" 
-                               FontAttributes="Bold" 
-                               VerticalOptions="Center" 
+                        <Label x:Name="lblTituloLivro"
+                               Text="Selecione um membro"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
                                TextColor="Black"/>
                     </HorizontalStackLayout>
+
                     <!-- Rótulo Membro -->
                     <Label Text="Membro:" FontAttributes="Bold" TextColor="Black"/>
                     <HorizontalStackLayout Spacing="10">
                         <Image Source="user_icon.png" WidthRequest="20" HeightRequest="20"/>
-                        <Label x:Name="lblNomeMembro" 
-                               Text="Aguardando seleção..." 
-                               VerticalOptions="Center" 
+                        <Label x:Name="lblNomeMembro"
+                               Text="Aguardando seleção..."
+                               VerticalOptions="Center"
                                TextColor="Black"/>
                     </HorizontalStackLayout>
-                    <!-- Devolução e Atraso -->
-                    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto" ColumnSpacing="20" >
+
+                    <!-- Devolução e Status -->
+                    <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto" ColumnSpacing="20">
                         <VerticalStackLayout>
                             <Label Text="Devolução Esperada:" FontAttributes="Bold" TextColor="Black"/>
-                            <Entry x:Name="entryDataDevolucao" 
-                                   Text="--/--/----" 
-                                   IsReadOnly="True" 
-                                   WidthRequest="120" 
-                                   BackgroundColor="#F9F9F9" 
+                            <Entry x:Name="entryDataDevolucao"
+                                   Text="--/--/----"
+                                   IsReadOnly="True"
+                                   WidthRequest="120"
+                                   BackgroundColor="#F9F9F9"
                                    TextColor="Black" />
                         </VerticalStackLayout>
-                        <Frame x:Name="frameAtraso" 
-                                Grid.Column="1" 
-                                BackgroundColor="#F0F0F0" 
-                                Padding="5,2" 
-                                CornerRadius="8" 
-                                HasShadow="False" 
+                        <Frame x:Name="frameAtraso"
+                                Grid.Column="1"
+                                BackgroundColor="#F0F0F0"
+                                Padding="5,2"
+                                CornerRadius="8"
+                                HasShadow="False"
                                 VerticalOptions="End">
-                            <Label x:Name="lblAtraso" 
-                                   Text="Sem informações" 
-                                   TextColor="Gray" 
+                            <Label x:Name="lblAtraso"
+                                   Text="Sem informações"
+                                   TextColor="Gray"
                                    FontSize="12"/>
                         </Frame>
                     </Grid>
                 </VerticalStackLayout>
             </Frame>
-            <!-- Multa e Estado do Livro lado a lado -->
-            <HorizontalStackLayout Spacing="20" VerticalOptions="Center">
-                <VerticalStackLayout Spacing="8" HorizontalOptions="StartAndExpand">
-                    <Label Text="Multa:" FontAttributes="Bold" TextColor="Black"/>
-                    <VerticalStackLayout Spacing="5">
-                        <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
-                            <CheckBox x:Name="chkPago"/>
-                            <Label Text="Pago" VerticalOptions="Center" TextColor="Black"/>
-                        </HorizontalStackLayout>
-                        <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
-                            <CheckBox x:Name="chkIsentar"/>
-                            <Label Text="Isentar Multa" VerticalOptions="Center" TextColor="Black"/>
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
-                </VerticalStackLayout>
-                <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
-                    <Label Text="Estado do Livro:" FontAttributes="Bold" TextColor="Black"/>
-                    <Frame BackgroundColor="White" BorderColor="#DDD" CornerRadius="8" Padding="0" HasShadow="True" >
-                        <Picker x:Name="estadoLivroPicker" Title="Selecione o estado"
-                                BackgroundColor="Transparent"
-                                TextColor="Black"
-                                >
-                            <Picker.Items>
-                                <x:String>Bom estado</x:String>
-                                <x:String>Danificado</x:String>
-                                <x:String>Perdido</x:String>
-                            </Picker.Items>
-                        </Picker>
-                    </Frame>
-                </VerticalStackLayout>
-            </HorizontalStackLayout>
+
+            <!-- Estado do Livro -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Estado do Livro:" FontAttributes="Bold" TextColor="Black"/>
+                <Frame BackgroundColor="White" BorderColor="#DDD" CornerRadius="8" Padding="0" HasShadow="True">
+                    <Picker x:Name="estadoLivroPicker" 
+                            Title="Selecione o estado"
+                            BackgroundColor="Transparent"
+                            TextColor="Black">
+                        <Picker.Items>
+                            <x:String>Bom estado</x:String>
+                            <x:String>Danificado</x:String>
+                            <x:String>Perdido</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </Frame>
+            </VerticalStackLayout>
+
             <!-- Justificativa -->
             <VerticalStackLayout Spacing="8">
                 <Label Text="Justificativa:" FontAttributes="Bold" TextColor="Black"/>
@@ -104,10 +94,9 @@
                         AutoSize="TextChanges"
                         HeightRequest="100"
                         BackgroundColor="#F9F9F9"
-                        TextColor="Black"
-                        Margin="0"
-                        />
+                        TextColor="Black"/>
             </VerticalStackLayout>
+
             <!-- Botões -->
             <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
                 <Button Text="Confirmar Devolução"

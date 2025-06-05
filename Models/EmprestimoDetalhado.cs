@@ -17,8 +17,7 @@ namespace BibliotecaAPP.Models
 
             // Propriedades calculadas
             public int DiasAtraso => DataDevolucao < DateTime.Now ? (DateTime.Now - DataDevolucao).Days : 0;
-            public string StatusAtraso => DiasAtraso > 0 ? "ATRASADO" : "NO PRAZO";
-            public decimal ValorMulta => DiasAtraso * 2.00m; // R$ 2,00 por dia
+            
         }
    
 }

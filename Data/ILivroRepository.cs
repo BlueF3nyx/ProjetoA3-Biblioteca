@@ -9,6 +9,6 @@ namespace BibliotecaAPP.Data
         Task<List<Livro>> ObterTodosAsync();
         Task AdicionarAsync(Livro livro);
         Task AtualizarAsync(Livro livro);  
-        Task ExcluirAsync(int id);          
+        Task ExcluirAsync(int id);
     }
 }
