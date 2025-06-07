@@ -18,7 +18,6 @@ namespace BibliotecaAPP.Views
             set { _emprestimosFiltrados = value; OnPropertyChanged(); }
         }
 
-        
         public new event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

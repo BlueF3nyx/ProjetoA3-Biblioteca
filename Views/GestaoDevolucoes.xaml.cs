@@ -121,7 +121,6 @@ namespace BibliotecaAPP.Views
         {
             // TODO: ✅ Ajuste o casting para EmprestimoDetalhado
             _emprestimoSelecionado = e.SelectedItem as EmprestimoDetalhado;
-
             if (_emprestimoSelecionado != null)
             {
                 // Exibir os detalhes do empréstimo selecionado

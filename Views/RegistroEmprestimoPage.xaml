@@ -19,7 +19,6 @@
                            FontAttributes="Bold"
                            TextColor="White"
                            HorizontalOptions="Center" />
-                    
                 </VerticalStackLayout>
 
                 <!-- Member Selection -->
@@ -64,8 +63,8 @@
                                 FontSize="16"
                                 HeightRequest="80"
                                 SelectedIndexChanged="ComboBoxMembros_SelectedIndexChanged"
-                                Focused="Picker_Focused"
-                                Unfocused="Picker_Unfocused" />
+                                
+                                />
                     </VerticalStackLayout>
                 </Border>
 
@@ -110,8 +109,7 @@
                                 FontSize="16"
                                 HeightRequest="80"
                                 SelectedIndexChanged="ComboBoxLivros_SelectedIndexChanged"
-                                Focused="Picker_Focused"
-                                Unfocused="Picker_Unfocused" />
+                                 />
                     </VerticalStackLayout>
                 </Border>
 

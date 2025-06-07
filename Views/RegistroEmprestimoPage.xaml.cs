@@ -91,7 +91,7 @@ namespace BibliotecaAPP.Views
 
         
 
-        private async Task VerificarStatusMembro(Membro membro) // Updated type reference
+        private async Task VerificarStatusMembro(Membro membro) 
         {
             try
             {
@@ -184,7 +184,7 @@ namespace BibliotecaAPP.Views
                     IdLivro = livro.ID,
                     IdMembro = membro.ID,
                     DataEmprestimo = DatePickerEmprestimo.Date,
-                    DataDevolucaoReal = DatePickerDevolucao.Date
+                    DataDevolucaoPrevista = DatePickerDevolucao.Date
                 };
 
                 try
@@ -213,16 +213,5 @@ namespace BibliotecaAPP.Views
             }
         }
 
-
-        // Eventos para as setas dos pickers
-        private void Picker_Focused(object sender, FocusEventArgs e)
-        {
-            // Implementar se necessário
-        }
-
-        private void Picker_Unfocused(object sender, FocusEventArgs e)
-        {
-            // Implementar se necessário
-        }
     }
 }
