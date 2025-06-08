@@ -23,7 +23,7 @@ namespace BibliotecaAPP.Data
                 membros.Add(new Membro
                 {
                     ID = reader.GetInt32("Id"),
-                    // ✅ Adicionada verificação IsDBNull para colunas string
+                    //verificação IsDBNull para colunas string
                     Nome = reader.IsDBNull("Nome") ? "" : reader.GetString("Nome"),
                     CPF = reader.IsDBNull("CPF") ? "" : reader.GetString("CPF"),
                     Telefone = reader.IsDBNull("Telefone") ? "" : reader.GetString("Telefone"),

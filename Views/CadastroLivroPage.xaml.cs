@@ -31,7 +31,7 @@ public partial class CadastroLivroPage : ContentPage
                 livros.Add(livro);
             }
 
-            // ✅ NOVO: Controlar mensagem de lista vazia
+            // Controlar mensagem de lista vazia
             if (EmptyStateLabel != null)
             {
                 EmptyStateLabel.IsVisible = !livros.Any();
@@ -118,7 +118,7 @@ public partial class CadastroLivroPage : ContentPage
             SalvarButton.Text = "Atualizar Livro";
             CancelarEdicaoButton.IsVisible = true;
 
-            // ✅ SCROLL PARA O TOPO DO FORMULÁRIO
+            // SCROLL PARA O TOPO DO FORMULÁRIO
             _ = Task.Run(async () =>
             {
                 await Task.Delay(100);
@@ -157,7 +157,7 @@ public partial class CadastroLivroPage : ContentPage
             {
                 await DisplayAlert("Sucesso", $"✅ {mensagem}", "OK");
 
-                // ✅ OPÇÃO MAIS EFICIENTE: Remover apenas da lista local
+               
                 livros.Remove(livro);
 
                 // Se estava editando este livro, limpar formulário
@@ -166,7 +166,7 @@ public partial class CadastroLivroPage : ContentPage
                     LimparFormulario();
                 }
 
-                // ✅ Atualizar estado vazio
+                // Atualizar estado vazio
                 if (EmptyStateLabel != null)
                 {
                     EmptyStateLabel.IsVisible = !livros.Any();
@@ -204,7 +204,7 @@ public partial class CadastroLivroPage : ContentPage
         TituloEntry.Text = "";
         AutorEntry.Text = "";
         CategoriaEntry.Text = "";
-        DisponibilidadePicker.SelectedIndex = 0; // ✅ Selecionar primeiro item ao invés de -1
+        DisponibilidadePicker.SelectedIndex = 0; 
         SalvarButton.Text = "Salvar Livro";
         CancelarEdicaoButton.IsVisible = false;
     }
@@ -215,7 +215,7 @@ public partial class CadastroLivroPage : ContentPage
         {
             var selectedBook = e.SelectedItem as Livro;
 
-            // ✅ MOSTRAR INFORMAÇÕES DETALHADAS
+            
             await DisplayAlert(" Detalhes do Livro",
                 $" Título: {selectedBook?.Titulo}\n" +
                 $" Autor: {selectedBook?.Autor}\n" +
@@ -227,7 +227,7 @@ public partial class CadastroLivroPage : ContentPage
         }
     }
 
-    // ✅ MÉTODO PARA ATUALIZAR QUANDO A PÁGINA APARECER
+    //MÉTODO PARA ATUALIZAR QUANDO A PÁGINA APARECER
     protected override void OnAppearing()
     {
         base.OnAppearing();

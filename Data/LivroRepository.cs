@@ -48,7 +48,7 @@ namespace BibliotecaAPP.Data
                 return new Livro
                 {
                     ID = reader.GetInt32("Id"),
-                    // ✅ Adicionada verificação IsDBNull para colunas string
+                    
                     Titulo = reader.IsDBNull("Titulo") ? "" : reader.GetString("Titulo"),
                     Autor = reader.IsDBNull("Autor") ? "" : reader.GetString("Autor"),
                     Categoria = reader.IsDBNull("Categoria") ? "" : reader.GetString("Categoria"),
@@ -88,7 +88,7 @@ namespace BibliotecaAPP.Data
             await command.ExecuteNonQueryAsync();
         }
 
-        // ✅ MÉTODO ATUALIZADO COM VERIFICAÇÃO DE SEGURANÇA
+        
         public async Task<bool> PodeExcluirAsync(int id)
         {
             using var connection = new MySqlConnection(_connectionString);
@@ -169,7 +169,7 @@ namespace BibliotecaAPP.Data
 
         public async Task AtualizarDisponibilidadeAsync(int livroId, string novaDisponibilidade)
         {
-            // ✅ VALIDAR se o valor é válido para o ENUM
+            // VALIDAR se o valor é válido para o ENUM
             var valoresValidos = new[] { "Disponível", "Emprestado", "Atrasado" };
             if (!valoresValidos.Contains(novaDisponibilidade))
             {

@@ -29,7 +29,7 @@ public partial class MainPage : ContentPage
         {
             throw new InvalidOperationException("Service provider is not initialized.");
         }
-
+        // cria uma instância da página RegistroEmprestimoPage usando o serviço de injeção de dependência
         var page = ActivatorUtilities.CreateInstance<RegistroEmprestimoPage>(App.Services);
         await Navigation.PushAsync(page);
     }
@@ -42,11 +42,11 @@ public partial class MainPage : ContentPage
             throw new InvalidOperationException("Service provider is not initialized.");
         }
 
-        // Retrieve the required dependencies from the service provider
+        
         var membroRepository = App.Services.GetRequiredService<IMembroRepository>();
         var emprestimoRepository = App.Services.GetRequiredService<IEmprestimoRepository>();
 
-        // Pass the dependencies to the GestaoDevolucoes constructor
+        // passa a dependencia para a página GestaoDevolucoes
         var page = new GestaoDevolucoes(membroRepository, emprestimoRepository);
         Navigation.PushAsync(page);
     }
@@ -62,7 +62,7 @@ public partial class MainPage : ContentPage
         {
             throw new InvalidOperationException("Service provider is not initialized.");
         }
-
+        // cria uma instância da página RelatoriosPage usando o serviço de injeção de dependência
         var emprestimoRepository = App.Services.GetRequiredService<IEmprestimoRepository>();
         var page = new RelatoriosPage(emprestimoRepository);
         Navigation.PushAsync(page);

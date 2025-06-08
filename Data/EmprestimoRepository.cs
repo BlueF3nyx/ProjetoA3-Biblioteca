@@ -7,7 +7,7 @@ using BibliotecaAPP.Models;
 
 namespace BibliotecaAPP.Data
 {
-    // Assumindo que IEmprestimoRepository tem as assinaturas corretas
+    
     public class EmprestimoRepository : IEmprestimoRepository
     {
         private readonly string _connectionString = "Server=sql.freedb.tech;Port=3306;Database=freedb_BibliotecaDB;Uid=freedb_usuarioBiblioteca;Pwd=jhnD5fZhu&Bz7a&;";
@@ -68,8 +68,7 @@ namespace BibliotecaAPP.Data
                     query += " AND e.DataEmprestimo >= @dataInicio AND e.DataEmprestimo < @dataFimAjustada AND e.DataDevolucaoReal IS NULL AND e.DataDevolucaoPrevista >= CURDATE()";
                     break;
                 default:
-                    // Se nenhum tipo válido, talvez retornar vazio ou todos no período?
-                    // Por enquanto, vamos retornar vazio para tipo desconhecido.
+                    
                     return emprestimosDetalhado;
             }
 
@@ -158,7 +157,7 @@ namespace BibliotecaAPP.Data
 
             while (await reader.ReadAsync())
             {
-                // *** CORREÇÃO AQUI: Verificar DBNull para DataEmprestimo e DataDevolucaoPrevista ***
+                
                 var dataEmprestimo = reader.IsDBNull("DataEmprestimo") ? DateTime.MinValue : reader.GetDateTime("DataEmprestimo");
                 var dataDevolucaoPrevista = reader.IsDBNull("DataDevolucaoPrevista") ? DateTime.MinValue : reader.GetDateTime("DataDevolucaoPrevista");
                 var dataDevolucaoReal = reader.IsDBNull("DataDevolucaoReal") ? (DateTime?)null : reader.GetDateTime("DataDevolucaoReal");
@@ -174,8 +173,8 @@ namespace BibliotecaAPP.Data
                     DataDevolucaoReal = dataDevolucaoReal,
                     // O status de exibição será calculado na propriedade StatusExibicao do modelo EmprestimoDetalhado
                     // Se precisar do status original do banco, adicione uma propriedade para ele no EmprestimoDetalhado
-                    // Ex: StatusBanco = reader.GetString("Status"),
-                    // Detalhes extras do JOIN
+                    
+                    
                     TituloLivro = reader.IsDBNull("TituloLivro") ? "Livro não encontrado" : reader.GetString("TituloLivro"),
                     NomeMembro = reader.IsDBNull("NomeMembro") ? "Membro não encontrado" : reader.GetString("NomeMembro")
                 });
@@ -196,7 +195,7 @@ namespace BibliotecaAPP.Data
 
             if (await reader.ReadAsync())
             {
-                // *** CORREÇÃO AQUI: Verificar DBNull para DataEmprestimo e DataDevolucaoPrevista ***
+               
                 var dataEmprestimo = reader.IsDBNull("DataEmprestimo") ? DateTime.MinValue : reader.GetDateTime("DataEmprestimo");
                 var dataDevolucaoPrevista = reader.IsDBNull("DataDevolucaoPrevista") ? DateTime.MinValue : reader.GetDateTime("DataDevolucaoPrevista");
                 var dataDevolucaoReal = reader.IsDBNull("DataDevolucaoReal") ? (DateTime?)null : reader.GetDateTime("DataDevolucaoReal");
@@ -220,7 +219,7 @@ namespace BibliotecaAPP.Data
         {
             using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
-            // Inclua DataDevolucaoPrevista e DataDevolucaoReal no UPDATE
+            
             var query = @"UPDATE Emprestimos
                           SET IdLivro = @IdLivro, IdMembro = @IdMembro,
                               DataEmprestimo = @DataEmprestimo, DataDevolucaoPrevista = @DataDevolucaoPrevista,
@@ -249,7 +248,7 @@ namespace BibliotecaAPP.Data
             return await command.ExecuteNonQueryAsync() > 0;
         }
 
-        // Método específico para realizar a devolução
+
         public async Task<bool> RealizarDevolucaoAsync(int emprestimoId, string estadoLivro, string? justificativa)
         {
             using var connection = new MySqlConnection(_connectionString);
@@ -264,14 +263,9 @@ namespace BibliotecaAPP.Data
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@Id", emprestimoId);
             command.Parameters.AddWithValue("@DataDevolucaoReal", DateTime.Now);
-            // Adicione parâmetros para EstadoLivroDevolucao e JustificativaDevolucao SE EXISTIREM na tabela
-            // command.Parameters.AddWithValue("@EstadoLivroDevolucao", estadoLivro); // Adicione se existir
-            // command.Parameters.AddWithValue("@JustificativaDevolucao", (object)justificativa ?? DBNull.Value); // Adicione se existir
-
+            
             return await command.ExecuteNonQueryAsync() > 0;
         }
-
-        // Método para obter empréstimos ativos para um membro específico, retornando o modelo detalhado para a UI
         // Método para obter empréstimos ativos para um membro específico, retornando o modelo detalhado para a UI
         public async Task<List<EmprestimoDetalhado>> ObterEmprestimosAtivosPorMembroAsync(int membroId)
         {
@@ -308,14 +302,10 @@ namespace BibliotecaAPP.Data
                     DataEmprestimo = dataEmprestimo,
                     DataDevolucaoPrevista = dataDevolucaoPrevista,
                     DataDevolucaoReal = dataDevolucaoReal,
-                    // ✅ Mapeia o Status do banco para a propriedade Status do EmprestimoDetalhado
+                    //  Mapeia o Status do banco para a propriedade Status do EmprestimoDetalhado
                     Status = reader.IsDBNull("Status") ? "Desconhecido" : reader.GetString("Status")
-                    // As propriedades DiasAtraso e StatusExibicao serão calculadas automaticamente na classe EmprestimoDetalhado
                 });
             }
-
-            // ✅ REMOVA TODO O LOOP FOREACH AQUI!
-            // O cálculo de DiasAtraso e StatusExibicao é feito na própria classe EmprestimoDetalhado.
 
             // Retorna a lista de empréstimos
             return emprestimos;
@@ -329,8 +319,6 @@ namespace BibliotecaAPP.Data
             using var command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@MembroId", membroId);
             var count = await command.ExecuteScalarAsync();
-
-            // ExecuteScalarAsync retorna um object, convertemos para long e verificamos se é maior que zero
             return Convert.ToInt64(count) > 0;
         }
         public async Task RemoverEmprestimoAsync(int emprestimoId)
