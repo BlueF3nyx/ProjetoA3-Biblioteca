@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using BibliotecaAPP.Core.Models;
-using BibliotecaAPP.Core.Data;
 using System.Runtime.CompilerServices;
+using BibliotecaAPP.Models;
+using BibliotecaAPP.Data;
 
 namespace BibliotecaAPP.Views
 {
@@ -84,7 +84,7 @@ namespace BibliotecaAPP.Views
         {
             
             if (emprestimo.DataDevolucaoReal.HasValue && emprestimo.DataDevolucaoReal.Value != DateTime.MinValue)
-                return "Devolvido"; // ✅ Verde
+                return "Devolvido";
 
             
             var hoje = DateTime.Now.Date;
@@ -93,7 +93,7 @@ namespace BibliotecaAPP.Views
             if (emprestimo.DataDevolucaoPrevista == DateTime.MinValue)
             {
                 
-                return "Emprestado (Sem Previsão)"; // Ou outro status padrão
+                return "Emprestado (Sem Previsão)"; 
             }
 
             var previsao = emprestimo.DataDevolucaoPrevista.Date;

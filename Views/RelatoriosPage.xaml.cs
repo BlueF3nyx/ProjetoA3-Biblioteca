@@ -1,10 +1,10 @@
-﻿// No arquivo RelatoriosPage.xaml.cs
+﻿
 using System;
 using Microsoft.Maui.Controls;
-using BibliotecaAPP.Core.Data; // Importe o namespace do seu repositório
-using BibliotecaAPP.Core.Models; // Importe o namespace dos seus modelos
-using System.Collections.Generic; // Para List
-using System.Text; // Para StringBuilder
+using System.Collections.Generic;
+using System.Text;
+using BibliotecaAPP.Models;
+using BibliotecaAPP.Data;
 
 namespace BibliotecaAPP.Views
 {
@@ -49,10 +49,10 @@ namespace BibliotecaAPP.Views
 
             try
             {
-                // ✅ Chama o método do repositório para obter os dados
+                //  Chama o método do repositório para obter os dados
                 List<EmprestimoDetalhado> dadosRelatorio = await _emprestimoRepository.ObterRelatorioEmprestimosAsync(dataInicio, dataFim, tipoRelatorio);
 
-                // ✅ Processa os resultados e formata para exibição
+                //  Processa os resultados e formata para exibição
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine($"Relatório: {tipoRelatorio}");
                 sb.AppendLine($"Período: {dataInicio:dd/MM/yyyy} até {dataFim:dd/MM/yyyy}");

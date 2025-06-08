@@ -1,11 +1,11 @@
-﻿using BibliotecaAPP.Core.Models;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using BibliotecaAPP.Models;
 
-namespace BibliotecaAPP.Core.Data
+namespace BibliotecaAPP.Data
 {
     // Assumindo que IEmprestimoRepository tem as assinaturas corretas
     public class EmprestimoRepository : IEmprestimoRepository

@@ -60,10 +60,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="BibliotecaAPP.Core\BibliotecaAPP.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Compile Update="Views\RegistroEmprestimoPage.xaml.cs">
 			<DependentUpon>RegistroEmprestimoPage.xaml</DependentUpon>
 		</Compile>
