@@ -1,5 +1,5 @@
-﻿using BibliotecaAPP.Core.Data;
-using BibliotecaAPP.Core.Models;
+﻿using BibliotecaAPP.Data;
+using BibliotecaAPP.Models;
 using MySql.Data.MySqlClient;
 using System.Data;
 

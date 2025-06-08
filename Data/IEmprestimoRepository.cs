@@ -1,8 +1,7 @@
-﻿
-using BibliotecaAPP.Core.Models;
+﻿using BibliotecaAPP.Models;
 
 
-namespace BibliotecaAPP.Core.Data
+namespace BibliotecaAPP.Data
 {
     public interface IEmprestimoRepository
     {

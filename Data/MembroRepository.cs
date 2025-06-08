@@ -1,10 +1,10 @@
-﻿using BibliotecaAPP.Core.Models;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BibliotecaAPP.Models;
 
-namespace BibliotecaAPP.Core.Data
+namespace BibliotecaAPP.Data
 {
     public class MembroRepository : IMembroRepository
     {

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-namespace BibliotecaAPP.Core.Models
+namespace BibliotecaAPP.Models
 {
     public class Historico : INotifyPropertyChanged
     {

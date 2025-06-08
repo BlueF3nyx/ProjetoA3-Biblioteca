@@ -1,6 +1,4 @@
-﻿
-
-namespace BibliotecaAPP.Core.Models { 
+﻿namespace BibliotecaAPP.Models { 
     // Usado para exibir informações detalhadas de um empréstimo na UI.
 
     public class EmprestimoDetalhado

@@ -1,8 +1,8 @@
-﻿using BibliotecaAPP.Core.Models;
+﻿using BibliotecaAPP.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BibliotecaAPP.Core.Data
+namespace BibliotecaAPP.Data
 {
     public interface IMembroRepository
     {

@@ -1,4 +1,4 @@
-﻿namespace BibliotecaAPP.Core.Models
+﻿namespace BibliotecaAPP.Models
 {
 
 
