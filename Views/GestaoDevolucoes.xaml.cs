@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using BibliotecaAPP.Core.Models; 
-
-using BibliotecaAPP.Core.Data; 
+using BibliotecaAPP.Data;
+using BibliotecaAPP.Models;
 
 namespace BibliotecaAPP.Views
 {
@@ -48,7 +47,7 @@ namespace BibliotecaAPP.Views
         {
             try
             {
-                // TODO: ✅ Substitua a simulação pela sua lógica real de banco de dados usando o Repositório
+               
                 var membrosDoBanco = await _membroRepository.ObterTodosAsync();
 
                 _membros.Clear();
@@ -56,8 +55,8 @@ namespace BibliotecaAPP.Views
                 {
                     _membros.Add(membro);
                 }
-                // O ItemsSource já foi definido no construtor, apenas atualizamos a coleção
-                // membroPicker.ItemsSource = _membros; // Esta linha não é mais necessária aqui
+                
+                
             }
             catch (Exception ex)
             {
@@ -94,12 +93,12 @@ namespace BibliotecaAPP.Views
         }
 
         // Método para carregar os empréstimos ativos de um membro
-        // TODO: ✅ Este método agora carrega EmprestimoDetalhado
+        
         private async Task LoadEmprestimosDoMembroAsync(int membroId)
         {
             try
             {
-                // TODO: ✅ Substitua a simulação pela sua lógica real de banco de dados usando o Repositório
+               
                 // Chame o método que retorna EmprestimoDetalhado
                 var emprestimosAtivos = await _emprestimoRepository.ObterEmprestimosAtivosPorMembroAsync(membroId);
 
@@ -111,7 +110,7 @@ namespace BibliotecaAPP.Views
             }
             catch (Exception ex)
             {
-                // TODO: Tratar erros de banco de dados
+                
                 await DisplayAlert("Erro", $"Ocorreu um erro ao carregar empréstimos: {ex.Message}", "OK");
             }
         }
@@ -119,19 +118,19 @@ namespace BibliotecaAPP.Views
         // Evento disparado quando um empréstimo é selecionado na ListView
         private void OnEmprestimoSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            // TODO: ✅ Ajuste o casting para EmprestimoDetalhado
+            
             _emprestimoSelecionado = e.SelectedItem as EmprestimoDetalhado;
             if (_emprestimoSelecionado != null)
             {
                 // Exibir os detalhes do empréstimo selecionado
                 lblTituloLivro.Text = _emprestimoSelecionado.TituloLivro;
 
-                // TODO: ✅ O nome do membro já está disponível no EmprestimoDetalhado
+                
                 lblNomeMembro.Text = _emprestimoSelecionado.NomeMembro ?? "Membro não encontrado"; // Exibe o nome ou um placeholder
 
                 lblDataDevolucaoPrevista.Text = _emprestimoSelecionado.DataDevolucaoPrevista.ToString("dd/MM/yyyy");
 
-                // Atualizar o status de atraso e a cor (assumindo que EmprestimoDetalhado tem essas propriedades)
+                
                 lblAtraso.Text = _emprestimoSelecionado.StatusExibicao; 
  
                 lblAtraso.TextColor = Colors.White; 
@@ -178,17 +177,17 @@ namespace BibliotecaAPP.Views
             {
                 try
                 {
-                    // TODO: ✅ Chame o método do seu Repositório para realizar a devolução
-                    // O método RealizarDevolucaoAsync no seu repositório espera emprestimoId, estadoLivro, justificativa
+                   
+                   
                     bool sucesso = await _emprestimoRepository.RealizarDevolucaoAsync(
-                        _emprestimoSelecionado.EmprestimoId, // ✅ Use a propriedade EmprestimoId do EmprestimoDetalhado
+                        _emprestimoSelecionado.EmprestimoId, 
                         estadoLivro,
                         justificativa
                     );
 
                     if (sucesso)
                     {
-                        // Recarrega a lista para refletir a mudança (o item devolvido deve sumir da lista de pendentes)
+                        
                         if (membroPicker.SelectedItem is Membro selectedMembro)
                         {
                             await LoadEmprestimosDoMembroAsync(selectedMembro.ID);
@@ -209,7 +208,7 @@ namespace BibliotecaAPP.Views
                 }
                 catch (Exception ex)
                 {
-                    // TODO: Tratar erros de banco de dados
+                    
                     await DisplayAlert("Erro", $"Ocorreu um erro ao processar a devolução: {ex.Message}", "OK");
                 }
             }

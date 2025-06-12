@@ -14,7 +14,7 @@ public partial class MainPage : ContentPage
 
     private void OnCadastroLivrosClicked(object sender, EventArgs e)
     {
-        Navigation.PushAsync(new CadastroLivroPage());
+          Navigation.PushAsync(new CadastroLivroPage());
     }
 
     private void OnCadastroMembrosClicked(object sender, EventArgs e)

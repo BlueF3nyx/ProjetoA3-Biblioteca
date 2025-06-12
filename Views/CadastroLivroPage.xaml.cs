@@ -1,4 +1,4 @@
-﻿using BibliotecaAPP.Core.Data;
+﻿
 using BibliotecaAPP.Data;
 using BibliotecaAPP.Models;
 using System.Collections.ObjectModel;
@@ -227,10 +227,5 @@ public partial class CadastroLivroPage : ContentPage
         }
     }
 
-    // ✅ MÉTODO PARA ATUALIZAR QUANDO A PÁGINA APARECER
-    protected override void OnAppearing()
-    {
-        base.OnAppearing();
-        _ = CarregarLivrosAsync();
-    }
+    
 }

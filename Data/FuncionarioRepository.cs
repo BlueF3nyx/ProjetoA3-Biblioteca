@@ -27,7 +27,6 @@ public class FuncionarioRepository : IFuncionarioRepository
                 Nome = reader.GetString("Nome"),
                 Email = reader.GetString("Email"),
                 Senha = reader.GetString("Senha"),
-                
             };
         }
 

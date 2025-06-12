@@ -4,11 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.14.36127.28
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotecaAPP", "BibliotecaAPP.csproj", "{129C2273-9192-0729-8317-178FD2796832}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6144E9A3-7085-EF40-7E78-4260497AE763} = {6144E9A3-7085-EF40-7E78-4260497AE763}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotecaAPP.Core", "BibliotecaAPP.Core\BibliotecaAPP.Core.csproj", "{6144E9A3-7085-EF40-7E78-4260497AE763}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,10 +17,6 @@ Global
 		{129C2273-9192-0729-8317-178FD2796832}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{129C2273-9192-0729-8317-178FD2796832}.Release|Any CPU.Build.0 = Release|Any CPU
 		{129C2273-9192-0729-8317-178FD2796832}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{6144E9A3-7085-EF40-7E78-4260497AE763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6144E9A3-7085-EF40-7E78-4260497AE763}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6144E9A3-7085-EF40-7E78-4260497AE763}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6144E9A3-7085-EF40-7E78-4260497AE763}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

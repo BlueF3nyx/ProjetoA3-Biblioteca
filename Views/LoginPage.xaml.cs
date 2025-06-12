@@ -1,4 +1,4 @@
-using BibliotecaAPP.Core.Data;
+using BibliotecaAPP.Data;
 
 namespace BibliotecaAPP.Views;
 
