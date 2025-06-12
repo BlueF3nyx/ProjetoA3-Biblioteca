@@ -30,6 +30,7 @@ namespace BibliotecaAPP.Views
                 await DisplayAlert("Erro", $"Falha ao carregar membros: {ex.Message}", "OK");
             }
         }
+        //metodo para salvar o membro
         private async void OnSalvarMembroClicked(object sender, EventArgs e)
         {
             string? nome = NomeEntry.Text?.Trim();
@@ -96,6 +97,8 @@ namespace BibliotecaAPP.Views
             TelefoneEntry.Text = "";
             EmailEntry.Text = "";
         }
+
+        //metodo para editar o membro selecionado
         private void OnEditarMembroClicked(object sender, EventArgs e)
         {
             var button = sender as Button;

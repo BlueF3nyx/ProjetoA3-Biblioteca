@@ -79,7 +79,7 @@ namespace BibliotecaAPP.Views
             if (selectedIndex != -1)
             {
                 var selectedMembro = (Membro)picker.SelectedItem;
-                // TODO: ✅ Chame o método do seu Repositório de Empréstimos para obter os ativos do membro
+                //Chame o método do Repositório de Empréstimos para obter os ativos do membro
                 await LoadEmprestimosDoMembroAsync(selectedMembro.ID);
 
                 // Atualiza a visibilidade do estado vazio após carregar
